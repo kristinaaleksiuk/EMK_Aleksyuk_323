@@ -241,6 +241,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AuthPage.cs" />
     <Compile Include="patient.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
