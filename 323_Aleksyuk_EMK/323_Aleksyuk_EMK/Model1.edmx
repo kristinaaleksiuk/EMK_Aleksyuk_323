@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище EMK_ALEKSUKModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="appointment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="patient_id" Type="int" Nullable="false" />
+          <Property Name="schedule_id" Type="int" Nullable="false" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="diagnosis">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="icd10_code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="doctor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="specialization_id" Type="int" Nullable="false" />
+          <Property Name="experience" Type="int" Nullable="false" />
+          <Property Name="cabinet" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="lab_test">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="visit_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="result" Type="nvarchar" MaxLength="200" />
+          <Property Name="test_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="medical_record">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="patient_id" Type="int" Nullable="false" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="patient">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="birth_date" Type="date" Nullable="false" />
+          <Property Name="gender" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" />
+          <Property Name="address" Type="nvarchar" MaxLength="200" />
+          <Property Name="policy_number" Type="nvarchar" MaxLength="16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="prescription">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="visit_id" Type="int" Nullable="false" />
+          <Property Name="medicine" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="dosage" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="duration" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="schedule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="doctor_id" Type="int" Nullable="false" />
+          <Property Name="visit_date" Type="date" Nullable="false" />
+          <Property Name="time_start" Type="time" Precision="7" Nullable="false" />
+          <Property Name="time_end" Type="time" Precision="7" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="specialization">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="role" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="photo" Type="nvarchar" MaxLength="200" />
+          <Property Name="doctor_id" Type="int" />
+          <Property Name="patient_id" Type="int" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" />
+          <Property Name="is_active" Type="bit" Nullable="false" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+          <Property Name="last_login" Type="datetime" />
+        </EntityType>
+        <EntityType Name="visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="appointment_id" Type="int" Nullable="false" />
+          <Property Name="medical_record_id" Type="int" Nullable="false" />
+          <Property Name="visit_date" Type="datetime" Nullable="false" />
+          <Property Name="complaints" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="visit_diagnosis">
+          <Key>
+            <PropertyRef Name="visit_id" />
+            <PropertyRef Name="diagnosis_id" />
+          </Key>
+          <Property Name="visit_id" Type="int" Nullable="false" />
+          <Property Name="diagnosis_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_app_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="appointment" Type="Self.appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="appointment">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_schedule">
+          <End Role="schedule" Type="Self.schedule" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="appointment" Type="Self.appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="schedule">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="appointment">
+              <PropertyRef Name="schedule_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_doctor_specialization">
+          <End Role="specialization" Type="Self.specialization" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="doctor" Type="Self.doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialization">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="doctor">
+              <PropertyRef Name="specialization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lab_visit">
+          <End Role="visit" Type="Self.visit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="lab_test" Type="Self.lab_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="visit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lab_test">
+              <PropertyRef Name="visit_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mr_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="medical_record" Type="Self.medical_record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="medical_record">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_presc_visit">
+          <End Role="visit" Type="Self.visit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prescription" Type="Self.prescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="visit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prescription">
+              <PropertyRef Name="visit_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_schedule_doctor">
+          <End Role="doctor" Type="Self.doctor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="doctor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="doctor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_user_doctor">
+          <End Role="doctor" Type="Self.doctor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="doctor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="doctor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_user_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vd_diagnosis">
+          <End Role="diagnosis" Type="Self.diagnosis" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="visit_diagnosis" Type="Self.visit_diagnosis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="diagnosis">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit_diagnosis">
+              <PropertyRef Name="diagnosis_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vd_visit">
+          <End Role="visit" Type="Self.visit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="visit_diagnosis" Type="Self.visit_diagnosis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="visit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit_diagnosis">
+              <PropertyRef Name="visit_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_visit_appointment">
+          <End Role="appointment" Type="Self.appointment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="appointment">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="appointment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_visit_mr">
+          <End Role="medical_record" Type="Self.medical_record" Multiplicity="1" />
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="medical_record">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="medical_record_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище EMK_ALEKSUKModelContainer">
+          <EntitySet Name="appointment" EntityType="Self.appointment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="diagnosis" EntityType="Self.diagnosis" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="doctor" EntityType="Self.doctor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lab_test" EntityType="Self.lab_test" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="medical_record" EntityType="Self.medical_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="patient" EntityType="Self.patient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="prescription" EntityType="Self.prescription" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="schedule" EntityType="Self.schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="specialization" EntityType="Self.specialization" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="visit" EntityType="Self.visit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="visit_diagnosis" EntityType="Self.visit_diagnosis" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_app_patient" Association="Self.FK_app_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="appointment" EntitySet="appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_schedule" Association="Self.FK_app_schedule">
+            <End Role="schedule" EntitySet="schedule" />
+            <End Role="appointment" EntitySet="appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_doctor_specialization" Association="Self.FK_doctor_specialization">
+            <End Role="specialization" EntitySet="specialization" />
+            <End Role="doctor" EntitySet="doctor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lab_visit" Association="Self.FK_lab_visit">
+            <End Role="visit" EntitySet="visit" />
+            <End Role="lab_test" EntitySet="lab_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mr_patient" Association="Self.FK_mr_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="medical_record" EntitySet="medical_record" />
+          </AssociationSet>
+          <AssociationSet Name="FK_presc_visit" Association="Self.FK_presc_visit">
+            <End Role="visit" EntitySet="visit" />
+            <End Role="prescription" EntitySet="prescription" />
+          </AssociationSet>
+          <AssociationSet Name="FK_schedule_doctor" Association="Self.FK_schedule_doctor">
+            <End Role="doctor" EntitySet="doctor" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_user_doctor" Association="Self.FK_user_doctor">
+            <End Role="doctor" EntitySet="doctor" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_user_patient" Association="Self.FK_user_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vd_diagnosis" Association="Self.FK_vd_diagnosis">
+            <End Role="diagnosis" EntitySet="diagnosis" />
+            <End Role="visit_diagnosis" EntitySet="visit_diagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vd_visit" Association="Self.FK_vd_visit">
+            <End Role="visit" EntitySet="visit" />
+            <End Role="visit_diagnosis" EntitySet="visit_diagnosis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_visit_appointment" Association="Self.FK_visit_appointment">
+            <End Role="appointment" EntitySet="appointment" />
+            <End Role="visit" EntitySet="visit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_visit_mr" Association="Self.FK_visit_mr">
+            <End Role="medical_record" EntitySet="medical_record" />
+            <End Role="visit" EntitySet="visit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EMK_ALEKSUKModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="appointment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patient_id" Type="Int32" Nullable="false" />
+          <Property Name="schedule_id" Type="Int32" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="patient" Relationship="Self.FK_app_patient" FromRole="appointment" ToRole="patient" />
+          <NavigationProperty Name="schedule" Relationship="Self.FK_app_schedule" FromRole="appointment" ToRole="schedule" />
+          <NavigationProperty Name="visit" Relationship="Self.FK_visit_appointment" FromRole="appointment" ToRole="visit" />
+        </EntityType>
+        <EntityType Name="diagnosis">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="icd10_code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="visit" Relationship="Self.visit_diagnosis" FromRole="diagnosis" ToRole="visit" />
+        </EntityType>
+        <EntityType Name="doctor">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="specialization_id" Type="Int32" Nullable="false" />
+          <Property Name="experience" Type="Int32" Nullable="false" />
+          <Property Name="cabinet" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="specialization" Relationship="Self.FK_doctor_specialization" FromRole="doctor" ToRole="specialization" />
+          <NavigationProperty Name="schedule" Relationship="Self.FK_schedule_doctor" FromRole="doctor" ToRole="schedule" />
+          <NavigationProperty Name="user" Relationship="Self.FK_user_doctor" FromRole="doctor" ToRole="user" />
+        </EntityType>
+        <EntityType Name="lab_test">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="visit_id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="result" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="test_date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="visit" Relationship="Self.FK_lab_visit" FromRole="lab_test" ToRole="visit" />
+        </EntityType>
+        <EntityType Name="medical_record">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patient_id" Type="Int32" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="patient" Relationship="Self.FK_mr_patient" FromRole="medical_record" ToRole="patient" />
+          <NavigationProperty Name="visit" Relationship="Self.FK_visit_mr" FromRole="medical_record" ToRole="visit" />
+        </EntityType>
+        <EntityType Name="patient">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="birth_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="policy_number" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="appointment" Relationship="Self.FK_app_patient" FromRole="patient" ToRole="appointment" />
+          <NavigationProperty Name="medical_record" Relationship="Self.FK_mr_patient" FromRole="patient" ToRole="medical_record" />
+          <NavigationProperty Name="user" Relationship="Self.FK_user_patient" FromRole="patient" ToRole="user" />
+        </EntityType>
+        <EntityType Name="prescription">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="visit_id" Type="Int32" Nullable="false" />
+          <Property Name="medicine" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="dosage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="duration" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="visit" Relationship="Self.FK_presc_visit" FromRole="prescription" ToRole="visit" />
+        </EntityType>
+        <EntityType Name="schedule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="doctor_id" Type="Int32" Nullable="false" />
+          <Property Name="visit_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="time_start" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="time_end" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="appointment" Relationship="Self.FK_app_schedule" FromRole="schedule" ToRole="appointment" />
+          <NavigationProperty Name="doctor" Relationship="Self.FK_schedule_doctor" FromRole="schedule" ToRole="doctor" />
+        </EntityType>
+        <EntityType Name="specialization">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="doctor" Relationship="Self.FK_doctor_specialization" FromRole="specialization" ToRole="doctor" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="photo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="doctor_id" Type="Int32" />
+          <Property Name="patient_id" Type="Int32" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="is_active" Type="Boolean" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="last_login" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="doctor" Relationship="Self.FK_user_doctor" FromRole="user" ToRole="doctor" />
+          <NavigationProperty Name="patient" Relationship="Self.FK_user_patient" FromRole="user" ToRole="patient" />
+        </EntityType>
+        <EntityType Name="visit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="appointment_id" Type="Int32" Nullable="false" />
+          <Property Name="medical_record_id" Type="Int32" Nullable="false" />
+          <Property Name="visit_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="complaints" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="appointment" Relationship="Self.FK_visit_appointment" FromRole="visit" ToRole="appointment" />
+          <NavigationProperty Name="lab_test" Relationship="Self.FK_lab_visit" FromRole="visit" ToRole="lab_test" />
+          <NavigationProperty Name="medical_record" Relationship="Self.FK_visit_mr" FromRole="visit" ToRole="medical_record" />
+          <NavigationProperty Name="prescription" Relationship="Self.FK_presc_visit" FromRole="visit" ToRole="prescription" />
+          <NavigationProperty Name="diagnosis" Relationship="Self.visit_diagnosis" FromRole="visit" ToRole="diagnosis" />
+        </EntityType>
+        <Association Name="FK_app_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="appointment" Type="Self.appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="appointment">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_app_schedule">
+          <End Role="schedule" Type="Self.schedule" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="appointment" Type="Self.appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="schedule">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="appointment">
+              <PropertyRef Name="schedule_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_visit_appointment">
+          <End Role="appointment" Type="Self.appointment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="appointment">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="appointment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_doctor_specialization">
+          <End Role="specialization" Type="Self.specialization" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="doctor" Type="Self.doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="specialization">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="doctor">
+              <PropertyRef Name="specialization_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_schedule_doctor">
+          <End Role="doctor" Type="Self.doctor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="doctor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="doctor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_user_doctor">
+          <End Role="doctor" Type="Self.doctor" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="doctor">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="doctor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lab_visit">
+          <End Role="visit" Type="Self.visit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="lab_test" Type="Self.lab_test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="visit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lab_test">
+              <PropertyRef Name="visit_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mr_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="medical_record" Type="Self.medical_record" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="medical_record">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_visit_mr">
+          <End Role="medical_record" Type="Self.medical_record" Multiplicity="1" />
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="medical_record">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="visit">
+              <PropertyRef Name="medical_record_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_user_patient">
+          <End Role="patient" Type="Self.patient" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="patient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_presc_visit">
+          <End Role="visit" Type="Self.visit" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="prescription" Type="Self.prescription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="visit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="prescription">
+              <PropertyRef Name="visit_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="visit_diagnosis">
+          <End Role="diagnosis" Type="Self.diagnosis" Multiplicity="*" />
+          <End Role="visit" Type="Self.visit" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="EMKEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="appointment" EntityType="Self.appointment" />
+          <EntitySet Name="diagnosis" EntityType="Self.diagnosis" />
+          <EntitySet Name="doctor" EntityType="Self.doctor" />
+          <EntitySet Name="lab_test" EntityType="Self.lab_test" />
+          <EntitySet Name="medical_record" EntityType="Self.medical_record" />
+          <EntitySet Name="patient" EntityType="Self.patient" />
+          <EntitySet Name="prescription" EntityType="Self.prescription" />
+          <EntitySet Name="schedule" EntityType="Self.schedule" />
+          <EntitySet Name="specialization" EntityType="Self.specialization" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="user" EntityType="Self.user" />
+          <EntitySet Name="visit" EntityType="Self.visit" />
+          <AssociationSet Name="FK_app_patient" Association="Self.FK_app_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="appointment" EntitySet="appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_app_schedule" Association="Self.FK_app_schedule">
+            <End Role="schedule" EntitySet="schedule" />
+            <End Role="appointment" EntitySet="appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_visit_appointment" Association="Self.FK_visit_appointment">
+            <End Role="appointment" EntitySet="appointment" />
+            <End Role="visit" EntitySet="visit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_doctor_specialization" Association="Self.FK_doctor_specialization">
+            <End Role="specialization" EntitySet="specialization" />
+            <End Role="doctor" EntitySet="doctor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_schedule_doctor" Association="Self.FK_schedule_doctor">
+            <End Role="doctor" EntitySet="doctor" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_user_doctor" Association="Self.FK_user_doctor">
+            <End Role="doctor" EntitySet="doctor" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lab_visit" Association="Self.FK_lab_visit">
+            <End Role="visit" EntitySet="visit" />
+            <End Role="lab_test" EntitySet="lab_test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mr_patient" Association="Self.FK_mr_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="medical_record" EntitySet="medical_record" />
+          </AssociationSet>
+          <AssociationSet Name="FK_visit_mr" Association="Self.FK_visit_mr">
+            <End Role="medical_record" EntitySet="medical_record" />
+            <End Role="visit" EntitySet="visit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_user_patient" Association="Self.FK_user_patient">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_presc_visit" Association="Self.FK_presc_visit">
+            <End Role="visit" EntitySet="visit" />
+            <End Role="prescription" EntitySet="prescription" />
+          </AssociationSet>
+          <AssociationSet Name="visit_diagnosis" Association="Self.visit_diagnosis">
+            <End Role="diagnosis" EntitySet="diagnosis" />
+            <End Role="visit" EntitySet="visit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище EMK_ALEKSUKModelContainer" CdmEntityContainer="EMKEntities">
+          <EntitySetMapping Name="appointment">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.appointment">
+              <MappingFragment StoreEntitySet="appointment">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="schedule_id" ColumnName="schedule_id" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="diagnosis">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.diagnosis">
+              <MappingFragment StoreEntitySet="diagnosis">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="icd10_code" ColumnName="icd10_code" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="doctor">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.doctor">
+              <MappingFragment StoreEntitySet="doctor">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fio" ColumnName="fio" />
+                <ScalarProperty Name="specialization_id" ColumnName="specialization_id" />
+                <ScalarProperty Name="experience" ColumnName="experience" />
+                <ScalarProperty Name="cabinet" ColumnName="cabinet" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lab_test">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.lab_test">
+              <MappingFragment StoreEntitySet="lab_test">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="visit_id" ColumnName="visit_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="result" ColumnName="result" />
+                <ScalarProperty Name="test_date" ColumnName="test_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="medical_record">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.medical_record">
+              <MappingFragment StoreEntitySet="medical_record">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="patient">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.patient">
+              <MappingFragment StoreEntitySet="patient">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fio" ColumnName="fio" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="policy_number" ColumnName="policy_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="prescription">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.prescription">
+              <MappingFragment StoreEntitySet="prescription">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="visit_id" ColumnName="visit_id" />
+                <ScalarProperty Name="medicine" ColumnName="medicine" />
+                <ScalarProperty Name="dosage" ColumnName="dosage" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="schedule">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.schedule">
+              <MappingFragment StoreEntitySet="schedule">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="doctor_id" ColumnName="doctor_id" />
+                <ScalarProperty Name="visit_date" ColumnName="visit_date" />
+                <ScalarProperty Name="time_start" ColumnName="time_start" />
+                <ScalarProperty Name="time_end" ColumnName="time_end" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="specialization">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.specialization">
+              <MappingFragment StoreEntitySet="specialization">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="fio" ColumnName="fio" />
+                <ScalarProperty Name="photo" ColumnName="photo" />
+                <ScalarProperty Name="doctor_id" ColumnName="doctor_id" />
+                <ScalarProperty Name="patient_id" ColumnName="patient_id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="is_active" ColumnName="is_active" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="last_login" ColumnName="last_login" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="visit">
+            <EntityTypeMapping TypeName="EMK_ALEKSUKModel.visit">
+              <MappingFragment StoreEntitySet="visit">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="appointment_id" ColumnName="appointment_id" />
+                <ScalarProperty Name="medical_record_id" ColumnName="medical_record_id" />
+                <ScalarProperty Name="visit_date" ColumnName="visit_date" />
+                <ScalarProperty Name="complaints" ColumnName="complaints" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="visit_diagnosis" TypeName="EMK_ALEKSUKModel.visit_diagnosis" StoreEntitySet="visit_diagnosis">
+            <EndProperty Name="diagnosis">
+              <ScalarProperty Name="id" ColumnName="diagnosis_id" />
+            </EndProperty>
+            <EndProperty Name="visit">
+              <ScalarProperty Name="id" ColumnName="visit_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4ea91243a7ca49729b41f63c4ca4fef7" Name="Diagram1">
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.appointment" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.diagnosis" Width="1.5" PointX="3" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.doctor" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.lab_test" Width="1.5" PointX="7.5" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.medical_record" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.patient" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.prescription" Width="1.5" PointX="7.5" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.schedule" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.specialization" Width="1.5" PointX="1.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.user" Width="1.5" PointX="6" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EMK_ALEKSUKModel.visit" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_app_patient" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_app_schedule" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_visit_appointment" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_doctor_specialization" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_schedule_doctor" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_user_doctor" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_lab_visit" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_mr_patient" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_visit_mr" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_user_patient" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.FK_presc_visit" ManuallyRouted="false" />
+        <AssociationConnector Association="EMK_ALEKSUKModel.visit_diagnosis" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
