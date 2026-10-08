@@ -25,7 +25,7 @@ namespace _323_Aleksyuk_EMK
         public MainWindow()
         {
             InitializeComponent();
-            //MainFrame.Navigate(new Pages.AuthPage());
+            MainFrame.Navigate(new Pages.AuthPage());
         }
 
 

@@ -6,9 +6,32 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AuthPage">
-
+        Title="Авторизация">
     <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="Вход в систему" FontSize="22" FontWeight="Bold"
+                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Логин" Margin="6,0,0,0"/>
+            <TextBox x:Name="TBLogin" MaxLength="50" ToolTip="Введите логин"/>
+
+            <TextBlock Text="Пароль" Margin="6,6,0,0"/>
+            <PasswordBox x:Name="PBPassword" MaxLength="50" ToolTip="Введите пароль"/>
+
+            <TextBlock x:Name="TBError" Foreground="#DD4842" Margin="6,4,0,0"
+                   TextWrapping="Wrap" Width="220"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                <Button x:Name="BtnLogin" Content="Войти" IsDefault="True" Click="BtnLogin_Click"/>
+                <Button x:Name="BtnReg" Content="Регистрация" Click="BtnReg_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
+
+      <!--Title="AuthPage">-->
+
+    <!--<Grid>
         <Grid HorizontalAlignment="Center" 
  Width="800" 
  Height="450" 
@@ -124,7 +147,7 @@
      Name="labelCaptcha" 
      Margin="116,104,0,87" 
      HorizontalAlignment="Left" 
-     Width="116" />
+     Width="116" />-->
 
-    </Grid>
-</Page>
+    <!--</Grid>
+</Page>-->

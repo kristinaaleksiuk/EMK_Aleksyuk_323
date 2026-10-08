@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace _323_Aleksyuk_EMK.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для ChangePass.xaml
+    /// Логика взаимодействия для ChangePassPage.xaml
     /// </summary>
-    public partial class ChangePass : Page
+    public partial class ChangePassPage : Page
     {
-        public ChangePass()
+        public ChangePassPage()
         {
             InitializeComponent();
         }

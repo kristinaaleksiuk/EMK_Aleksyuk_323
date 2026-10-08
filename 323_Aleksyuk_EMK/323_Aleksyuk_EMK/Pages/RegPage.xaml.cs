@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _323_Aleksyuk_EMK.Pages
+namespace _323_Aleksyuk_EMK
 {
     /// <summary>
-    /// Логика взаимодействия для RegPag.xaml
+    /// Логика взаимодействия для RegPage.xaml
     /// </summary>
-    public partial class RegPag : Page
+    public partial class RegPage : Page
     {
-        public RegPag()
+        public RegPage()
         {
             InitializeComponent();
         }
