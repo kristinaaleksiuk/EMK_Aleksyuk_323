@@ -14,4 +14,5 @@ namespace _323_Aleksyuk_EMK
     public partial class App : Application
     {
     }
+
 }

@@ -4,6 +4,22 @@
              xmlns:local="clr-namespace:_323_Aleksyuk_EMK"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Dictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style 
+            TargetType="Button">
+                
+                <Setter Property="Background" Value="#FF0080"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="Margin" Value="12"/>
+                <Setter Property="FontFamily" Value="Tahoma"/>
+                <Setter Property="FontSize" Value="12pt"/>
+                <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
