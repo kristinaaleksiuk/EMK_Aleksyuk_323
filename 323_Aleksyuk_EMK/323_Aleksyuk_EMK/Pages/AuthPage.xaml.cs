@@ -43,7 +43,7 @@ namespace _323_Aleksyuk_EMK.Pages
             if (lockLeft > 0) return;
             ErrorText.Text = "";
 
-            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.Password))
+            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.password))
             {
                 ErrorText.Text = "Введите логин и пароль";
                 return;
@@ -57,9 +57,9 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            string hashedPassword = Security.GetHash(PbPassword.Password);   // Шаг 7
-            var user = Entities.GetContext().Users.AsNoTracking()
-                .FirstOrDefault(u => u.Login == TbLogin.Text && u.Password == hashedPassword);
+            string hashedPassword = Security.GetHash(PbPassword.password);   // Шаг 7
+            var user = Entities.GetContext().user.AsNoTracking()
+                .FirstOrDefault(u => u.login == TbLogin.Text && u.password == hashedPassword);
 
             if (user == null)
             {
@@ -75,7 +75,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // Успешный вход: берём отслеживаемую запись пользователя
-            Session.CurrentUser = Entities.GetContext().Users.First(u => u.ID == user.ID);
+            Session.CurrentUser = Entities.GetContext().user.First(u => u.ID == user.ID);
             failedAttempts = 0;
 
             switch (user.Role)

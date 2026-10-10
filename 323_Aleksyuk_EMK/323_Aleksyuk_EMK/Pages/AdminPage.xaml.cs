@@ -29,7 +29,7 @@ namespace _323_Aleksyuk_EMK.Pages
             var user = Session.CurrentUser;
             if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
-            TbName.Text = user.FIO;
+            TbName.Text = user.fio;
             TbInfo.Text = "Роль: " + user.Role;
             PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
         }
@@ -38,7 +38,7 @@ namespace _323_Aleksyuk_EMK.Pages
         private void BtnPatients_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new PatientsPage()); }
         private void BtnAppointments_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new AppointmentsPage()); }
         private void BtnCharts_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new ChartsPage()); }
-        private void BtnChangePass_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new ChangePasswordPage()); }
+        private void BtnChangePass_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new ChangePassPage()); }
         private void BtnLogout_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new AuthPage()); }
     }
 }

@@ -110,7 +110,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="nvarchar" MaxLength="64" Nullable="false" />
-          <Property Name="role" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Role" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="photo" Type="nvarchar" MaxLength="200" />
           <Property Name="doctor_id" Type="int" />
@@ -542,7 +542,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="role" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="photo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="doctor_id" Type="Int32" />
@@ -948,7 +948,7 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="login" ColumnName="login" />
                 <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="fio" ColumnName="fio" />
                 <ScalarProperty Name="photo" ColumnName="photo" />
                 <ScalarProperty Name="doctor_id" ColumnName="doctor_id" />

@@ -30,7 +30,7 @@ namespace _323_Aleksyuk_EMK
         {
             // 6.1 проверка заполнения полей
             if (string.IsNullOrWhiteSpace(TbLogin.Text) || string.IsNullOrWhiteSpace(TbFio.Text) ||
-                string.IsNullOrEmpty(PbFirst.Password) || string.IsNullOrEmpty(PbSecond.Password))
+                string.IsNullOrEmpty(PbFirst.password) || string.IsNullOrEmpty(PbSecond.password))
             {
                 ErrorText.Text = "Заполните все поля!";
                 return;
@@ -40,14 +40,14 @@ namespace _323_Aleksyuk_EMK
 
             // 6.2 логин должен быть уникальным
             string login = TbLogin.Text.Trim();
-            if (ctx.Users.AsNoTracking().Any(u => u.Login == login))
+            if (ctx.user.AsNoTracking().Any(u => u.login == login))
             {
                 ErrorText.Text = "Пользователь с таким логином уже существует!";
                 return;
             }
 
             // 6.3 формат пароля: >= 6 символов, английская раскладка, есть цифра
-            string passError = Security.ValidatePassword(PbFirst.Password);
+            string passError = Security.ValidatePassword(PbFirst.password);
             if (passError != null)
             {
                 ErrorText.Text = passError;
@@ -55,28 +55,28 @@ namespace _323_Aleksyuk_EMK
             }
 
             // 6.4 пароли совпадают
-            if (PbFirst.Password != PbSecond.Password)
+            if (PbFirst.password != PbSecond.password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;
             }
 
             // 6.5 запись в БД; пароль хранится только в виде хеша (Шаг 7)
-            string role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
-            var user = new Users
+            string Role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
+            var user = new user
             {
-                FIO = TbFio.Text.Trim(),
-                Login = login,
-                Password = Security.GetHash(PbFirst.Password),
-                Role = role
+                fio = TbFio.Text.Trim(),
+                login = login,
+                password = Security.GetHash(PbFirst.password),
+                Role = Role
             };
-            ctx.Users.Add(user);
+            ctx.user.Add(user);
             ctx.SaveChanges();
 
             // для роли User сразу создаём карточку пациента, чтобы можно было записываться на приём
-            if (role == "User")
+            if (Role == "User")
             {
-                ctx.Patients.Add(new Patients { FIO = user.FIO, UserID = user.ID });
+                ctx.Patients.Add(new Patients { fio = user.fio, UserID = user.ID });
                 ctx.SaveChanges();
             }
 

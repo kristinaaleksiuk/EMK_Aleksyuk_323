@@ -31,13 +31,13 @@ namespace _323_Aleksyuk_EMK.Pages
         var ctx = Entities.GetContext();
         ctx.Refresh();
 
-        TbName.Text = user.FIO;
-        TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.Login;
+        TbName.Text = user.fio;
+        TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.login;
         PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
 
         int uid = user.ID;
         var patientIds = ctx.Patients.Where(p => p.UserID == uid).Select(p => p.ID).ToList();
-        DgAppointments.ItemsSource = ctx.Appointments
+        DgAppointments.ItemsSource = ctx.appointment
             .Where(a => patientIds.Contains(a.PatientID))
             .ToList()
             .OrderByDescending(a => a.Date)

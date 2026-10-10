@@ -1,0 +1,53 @@
+﻿<Page x:Class="_323_Aleksyuk_EMK.Pages.UsersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+         Title="ЭМК — Пользователи" Loaded="Page_Loaded">
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Пользователи" Style="{StaticResource SectionTitle}" FontSize="22" Margin="0,0,0,6" />
+
+        <!-- Поиск и фильтр по роли -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <StackPanel Margin="0,0,14,0">
+                <TextBlock Text="Поиск по ФИО или логину" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                <TextBox x:Name="TbSearch" ToolTip="Введите часть ФИО или логина" TextChanged="Filter_Changed" />
+            </StackPanel>
+            <StackPanel Margin="0,0,14,0">
+                <TextBlock Text="Роль" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                <ComboBox x:Name="CbRole" SelectedIndex="0" ToolTip="Фильтр по роли" SelectionChanged="Filter_Changed">
+                    <ComboBoxItem Content="Все роли" />
+                    <ComboBoxItem Content="Admin" />
+                    <ComboBoxItem Content="User" />
+                </ComboBox>
+            </StackPanel>
+            <Button Content="Сбросить" VerticalAlignment="Bottom" Margin="0,0,0,0"
+                    Style="{StaticResource SecondaryButton}" ToolTip="Очистить фильтры" Click="BtnReset_Click" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" x:Name="DgUsers">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="60" />
+                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="*" />
+                <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="2*" />
+                <DataGridTextColumn Header="Роль" Binding="{Binding Role}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button Content="Добавить" ToolTip="Добавить пользователя" Click="BtnAdd_Click" />
+            <Button Content="Изменить" ToolTip="Изменить выбранного пользователя" Click="BtnEdit_Click" />
+            <Button Content="Удалить" ToolTip="Удалить выбранного пользователя" Style="{StaticResource DangerButton}" Click="BtnDelete_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

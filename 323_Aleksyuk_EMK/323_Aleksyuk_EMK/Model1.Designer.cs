@@ -1,4 +1,4 @@
-﻿// Создание кода T4 для модели "C:\Users\Admin\source\repos\EMK_Aleksyuk_323\323_Aleksyuk_EMK\323_Aleksyuk_EMK\Model1.edmx" включено. 
+﻿// Создание кода T4 для модели "C:\user\Admin\source\repos\EMK_Aleksyuk_323\323_Aleksyuk_EMK\323_Aleksyuk_EMK\Model1.edmx" включено. 
 // Чтобы включить формирование кода прежних версий, измените значение свойства "Стратегия создания кода" конструктора
 // на "Legacy ObjectContext". Это свойство доступно в окне "Свойства", если модель
 // открыта в конструкторе.

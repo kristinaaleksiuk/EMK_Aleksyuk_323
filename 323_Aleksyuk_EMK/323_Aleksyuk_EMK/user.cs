@@ -17,7 +17,7 @@ namespace _323_Aleksyuk_EMK
         public int id { get; set; }
         public string login { get; set; }
         public string password { get; set; }
-        public string role { get; set; }
+        public string Role { get; set; }
         public string fio { get; set; }
         public string photo { get; set; }
         public Nullable<int> doctor_id { get; set; }
