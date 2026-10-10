@@ -43,25 +43,25 @@ namespace _323_Aleksyuk_EMK.Pages
             if (DpBirth.SelectedDate.HasValue && DpBirth.SelectedDate.Value > DateTime.Today)
             { ErrorText.Text = "Дата рождения не может быть в будущем!"; return; }
 
-            var ctx = Entities.GetContext();
+            var Core.DB = Entities.GetContext();
             try
             {
                 if (_current == null)
                 {
-                    ctx.patient.Add(new patient
+                    Core.DB.patient.Add(new patient
                     {
                         fio = fio,
-                        BirthDate = DpBirth.SelectedDate,
-                        Phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim()
+                        birth_date = DpBirth.SelectedDate,
+                        phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim()
                     });
                 }
                 else
                 {
                     _current.fio = fio;
-                    _current.BirthDate = DpBirth.SelectedDate;
-                    _current.Phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim();
+                    _current.birth_date = DpBirth.SelectedDate;
+                    _current.phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim();
                 }
-                ctx.SaveChanges();
+                Core.DB.SaveChanges();
                 MessageBox.Show("Данные успешно сохранены!");
                 NavigationService?.GoBack();
             }

@@ -1,6 +1,7 @@
 ﻿using DurableTask.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 TbFio.Text = _current.fio;
                 TbLogin.Text = _current.login;
                 TbPhoto.Text = _current.photo;
-                CbRole.SelectedIndex = _current.Role == "Admin" ? 1 : 0;
+                CbRole.SelectedIndex = _current.role == "Admin" ? 1 : 0;
             }
         }
 
@@ -50,7 +51,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            var ctx = Entities.GetContext();
+            var list = Core.DB.user.ToList().AsEnumerable();
             string fio = TbFio.Text.Trim();
             string login = TbLogin.Text.Trim();
 
@@ -59,7 +60,7 @@ namespace _323_Aleksyuk_EMK.Pages
             if (CbRole.SelectedItem == null) { ErrorText.Text = "Выберите роль!"; return; }
 
             int selfId = _current != null ? _current.id : 0;
-            if (ctx.user.Any(u => u.login == login && u.id != selfId))
+            if (Core.DB.user.Any(u => u.login == login && u.id != selfId))
             {
                 ErrorText.Text = "Пользователь с таким логином уже существует!";
                 return;
@@ -68,8 +69,11 @@ namespace _323_Aleksyuk_EMK.Pages
             bool needPassword = _current == null || PbPass.Password.Length > 0;
             if (needPassword)
             {
-                string passError = Core.ValidatePassword(PbPass.Password);
-                if (passError != null) { ErrorText.Text = passError; return; }
+                if (string.IsNullOrWhiteSpace(PbPass.Password))
+                {
+                    ErrorText.Text = "Пароль не может быть пустым!";
+                    return;
+                }
             }
 
             string Role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
@@ -77,34 +81,44 @@ namespace _323_Aleksyuk_EMK.Pages
 
             try
             {
+                // 1. Считываем данные роли напрямую из интерфейса, чтобы избежать ошибок с переменными
+                string selectedRole = CbRole.Text;
+
                 if (_current == null)
                 {
                     var user = new user
                     {
                         fio = fio,
                         login = login,
-                        role = role,
+                        role = selectedRole, // Передаем правильную переменную
                         photo = photo,
                         password = Core.GetHash(PbPass.Password)
                     };
-                    ctx.user.Add(user);
-                    ctx.SaveChanges();
+                    Core.DB.user.Add(user);
+                    Core.DB.SaveChanges();
 
-                    if (Role == "User")
+                    if (selectedRole == "User")
                     {
-                        ctx.patient.Add(new patient { fio = fio, user = user });
-                        ctx.SaveChanges();
+                        // Создаем пациента и привязываем к нему созданного пользователя по правилам EF5
+                        var newPatient = new patient { fio = fio };
+                        newPatient.user = (ICollection<user>)user;
+
+                        Core.DB.patient.Add(newPatient);
+                        Core.DB.SaveChanges();
                     }
                 }
                 else
                 {
                     _current.fio = fio;
                     _current.login = login;
-                    _current.role = role;
+                    _current.role = selectedRole; // Передаем правильную переменную
                     _current.photo = photo;
+
                     if (needPassword)
+                    {
                         _current.password = Core.GetHash(PbPass.Password);
-                    ctx.SaveChanges();
+                    }
+                    Core.DB.SaveChanges();
                 }
 
                 MessageBox.Show("Данные успешно сохранены!");

@@ -27,7 +27,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnChange_Click(object sender, RoutedEventArgs e)
         {
-            var user = Session.CurrentUser;
+            var user = Core.CurrentUser;
             if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
             // 3. заполнены все поля

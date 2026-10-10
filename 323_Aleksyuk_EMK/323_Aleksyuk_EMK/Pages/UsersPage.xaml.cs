@@ -27,7 +27,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Entities.GetContext().Refresh();     // обновляем данные при каждом показе страницы
+            Core.Context = new EMKEntities();
             UpdateList();
         }
 
@@ -37,15 +37,15 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             if (!IsInitialized) return;
 
-            var list = Entities.GetContext().Users.ToList().AsEnumerable();
+            var list = Core.DB.user.ToList().AsEnumerable();
 
             string q = TbSearch.Text.Trim().ToLower();
             if (q.Length > 0)
-                list = list.Where(u => u.FIO.ToLower().Contains(q) || u.Login.ToLower().Contains(q));
+                list = list.Where(u => u.fio.ToLower().Contains(q) || u.login.ToLower().Contains(q));
 
             var role = ((ComboBoxItem)CbRole.SelectedItem)?.Content.ToString();
             if (role == "Admin" || role == "User")
-                list = list.Where(u => u.Role == role);
+                list = list.Where(u => u.role == role);
 
             DgUsers.ItemsSource = list.OrderBy(u => u.id).ToList();
         }
@@ -63,7 +63,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-            var selected = DgUsers.SelectedItem as Users;
+            var selected = DgUsers.SelectedItem as user;
             if (selected == null) { MessageBox.Show("Выберите пользователя в таблице."); return; }
             NavigationService?.Navigate(new AddUserPage(selected));
         }
@@ -73,16 +73,17 @@ namespace _323_Aleksyuk_EMK.Pages
             var selected = DgUsers.SelectedItem as user;
             if (selected == null) { MessageBox.Show("Выберите пользователя в таблице."); return; }
 
-            if (Session.CurrentUser == null || selected.id != Session.CurrentUser.id)
+            if (Core.CurrentUser == null || selected.id != Core.CurrentUser.id)
             {
-                if (MessageBox.Show("Вы точно хотите удалить пользователя «" + selected.FIO + "»?\nБудут удалены связанные пациенты и приёмы.",
-                        "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                if (MessageBox.Show("Вы точно хотите удалить пользователя «" + selected.fio + "»?\nБудут удалены связанные пациенты и приёмы.",
+                        "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) 
+                    != MessageBoxResult.Yes)
                     return;
 
                 try
                 {
-                    DbOps.DeleteUser(selected);                // каскадное удаление
-                    Entities.GetContext().SaveChanges();
+                    Core.DB.user.Remove(selected);
+                    Core.DB.SaveChanges();
                     MessageBox.Show("Данные успешно удалены!");
                     UpdateList();
                 }

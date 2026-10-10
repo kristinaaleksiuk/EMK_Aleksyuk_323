@@ -36,11 +36,11 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-            var ctx = Entities.GetContext();
+            var Core.DB = Entities.GetContext();
 
             // 6.2 логин должен быть уникальным
             string login = TbLogin.Text.Trim();
-            if (ctx.user.AsNoTracking().Any(u => u.login == login))
+            if (Core.DB.user.AsNoTracking().Any(u => u.login == login))
             {
                 ErrorText.Text = "Пользователь с таким логином уже существует!";
                 return;
@@ -62,25 +62,27 @@ namespace _323_Aleksyuk_EMK
             }
 
             // 6.5 запись в БД; пароль хранится только в виде хеша (Шаг 7)
-            string Role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
+            string role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
             var user = new user
             {
                 fio = TbFio.Text.Trim(),
                 login = login,
                 password = Core.GetHash(PbFirst.Password),
-                Role = Role
+                role = role
             };
-            ctx.user.Add(user);
-            ctx.SaveChanges();
+            Core.DB.user.Add(user);
+            Core.DB.SaveChanges();
 
-            // для роли User сразу создаём карточку пациента, чтобы можно было записываться на приём
-            if (Role == "User")
-            {
-                ctx.patient.Add(new patient { fio = user.fio, UserID = user.id });
-                ctx.SaveChanges();
-            }
+			// для роли User сразу создаём карточку пациента, чтобы можно было записываться на приём
+			if (role == "User")
+			{
+				var newPatient = new patient { fio = user.fio };
+				newPatient.user = (ICollection<user>)user;
+				Core.DB.patient.Add(newPatient);
+				Core.DB.SaveChanges();
+			}
 
-            MessageBox.Show("Пользователь успешно зарегистрирован!", "Регистрация",
+			MessageBox.Show("Пользователь успешно зарегистрирован!", "Регистрация",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             NavigationService?.Navigate(new AuthPage());
         }

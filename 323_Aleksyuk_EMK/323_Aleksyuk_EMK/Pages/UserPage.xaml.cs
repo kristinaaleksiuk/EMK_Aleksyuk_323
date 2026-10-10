@@ -25,19 +25,19 @@ namespace _323_Aleksyuk_EMK.Pages
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        var user = Session.CurrentUser;
+        var user = Core.CurrentUser;
         if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
-        var ctx = Entities.GetContext();
-        ctx.Refresh();
+        var Core.DB = Entities.GetContext();
+        Core.DB.Refresh();
 
         TbName.Text = user.fio;
         TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.login;
         PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
 
         int uid = user.id;
-        var patientIds = ctx.patient.Where(p => p.UserID == uid).Select(p => p.id).ToList();
-        DgAppointments.ItemsSource = ctx.appointment
+        var patientIds = Core.DB.patient.Where(p => p.UserID == uid).Select(p => p.id).ToList();
+        DgAppointments.ItemsSource = Core.DB.appointment
             .Where(a => patientIds.Contains(a.PatientID))
             .ToList()
             .OrderByDescending(a => a.Date)

@@ -27,27 +27,29 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             InitializeComponent();
             _current = selected;
-            var ctx = Entities.GetContext();
+            var ctx = Core.DB;
 
             // Пациенты: администратор видит всех, пользователь - только себя
-            if (session.IsAdmin)
+            if (Core.CurrentUser.role == "Admin")
             {
-                CbPatient.ItemsSource = ctx.patient.ToList().OrderBy(p => p.fio).ToList();
+                CbPatient.ItemsSource = Core.DB.patient.ToList().OrderBy(p => p.fio).ToList();
             }
             else
             {
-                CbPatient.ItemsSource = new List<patient> { Session.GetOrCreatePatient() };
+                var currentPatient = Core.DB.patient.FirstOrDefault(p => p.fio == Core.CurrentUser.login);
+                CbPatient.ItemsSource = new List<patient> { currentPatient };
                 CbPatient.SelectedIndex = 0;
                 CbPatient.IsEnabled = false;
-                CbStatus.IsEnabled = false;          // обычный пользователь только записывается
+                CbStatus.IsEnabled = false; // обычный пользователь только записывается
             }
 
             // Свободные слоты (+ текущий слот редактируемого приёма)
+      
             var now = DateTime.Now;
             int currentSlotId = _current != null ? _current.schedule_id : 0;
-            CbSlot.ItemsSource = ctx.Schedules.ToList()
-                .Where(s => (s.Status == "Свободно" && s.SlotTime >= now) || s.id == currentSlotId)
-                .OrderBy(s => s.SlotTime)
+            CbSlot.ItemsSource = Core.DB.schedule.ToList()
+                .Where(s => s.status == "Свободно" || s.id == currentSlotId)
+                .OrderBy(s => s.time_start) // Сортируем по правильному свойству time_start
                 .ToList();
 
             CbStatus.SelectedIndex = 0;
@@ -55,7 +57,7 @@ namespace _323_Aleksyuk_EMK.Pages
             if (_current != null)
             {
                 TbTitle.Text = "Изменение приёма";
-                CbPatient.SelectedItem = ((IEnumerable<patient>)CbPatient.ItemsSource).FirstOrDefault(p => p.id == _current.patient);
+                CbPatient.SelectedItem = ((IEnumerable<patient>)CbPatient.ItemsSource).FirstOrDefault((p => p.id == _current.patient_id));
                 CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource).FirstOrDefault(s => s.id == _current.schedule_id);
                 foreach (ComboBoxItem item in CbStatus.Items)
                     if (item.Content.ToString() == _current.status) CbStatus.SelectedItem = item;
@@ -75,22 +77,22 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             string status = statusItem.Content.ToString();
-            var ctx = Entities.GetContext();
+            var ctx = Core.DB;
 
             try
             {
                 if (_current != null && _current.schedule_id != slot.id)
                 {
                     // перенос приёма: прежний слот освобождается
-                    var oldSlot = ctx.Schedules.Find(_current.schedule_id);
-                    if (oldSlot != null) oldSlot.Status = "Свободно";
+                    var oldSlot = Core.DB.schedule.Find(_current.schedule_id);
+                    if (oldSlot != null) oldSlot.status = "Свободно";
                 }
 
                 appointment appointment = _current;
                 if (appointment == null)
                 {
                     appointment = new appointment();
-                    ctx.appointment.Add(appointment);
+                    Core.DB.appointment.Add(appointment);
                 }
 
                 appointment.patient = patient;
@@ -98,7 +100,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 appointment.status = status;
                 slot.status = status == "Отменён" ? "Свободно" : "Занято";
 
-                ctx.SaveChanges();
+                Core.DB.SaveChanges();
                 MessageBox.Show("Данные успешно сохранены!");
                 NavigationService?.GoBack();
             }

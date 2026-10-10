@@ -3,7 +3,6 @@ using DurableTask.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Core.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,7 +35,7 @@ namespace _323_Aleksyuk_EMK.Pages
         public AuthPage()
         {
             InitializeComponent();
-            Session.CurrentUser = null;          // открытие страницы авторизации = выход из системы
+            Core.CurrentUser = null;          // открытие страницы авторизации = выход из системы
         }
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
@@ -76,7 +75,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // Успешный вход: берём отслеживаемую запись пользователя
-            Session.CurrentUser = Entities.GetContext().user.First(u => u.id == user.id);
+            Core.CurrentUser = Entities.GetContext().user.First(u => u.id == user.id);
             failedAttempts = 0;
 
             switch (user.role)
