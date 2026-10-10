@@ -68,22 +68,28 @@ namespace _323_Aleksyuk_EMK
                 login = login,
                 password = Core.GetHash(PbFirst.Password),
                 role = role,
-                created_at = DateTime.Now, // Передаем текущую дату создания
-                is_active = true
+                created_at = DateTime.Now, // Передаем текущее системное время
+                is_active = true           // По умолчанию активируем учетную запись
             };
-            Core.DB.user.Add(user);
-            Core.DB.SaveChanges();
 
-			// для роли User сразу создаём карточку пациента, чтобы можно было записываться на приём
-			if (role == "User")
-			{
-				var newPatient = new patient { fio = user.fio };
-				newPatient.user = (ICollection<user>)user;
-				Core.DB.patient.Add(newPatient);
-				Core.DB.SaveChanges();
-			}
+            try
+            {
+                Core.DB.SaveChanges();
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                // Этот цикл выведет в окно отладки или MessageBox точное имя поля, которое не заполнено
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Свойство: {validationError.PropertyName} Ошибка: {validationError.ErrorMessage}");
+                    }
+                }
+                throw; // Программа остановится здесь, но в окне "Вывод" (Output) будет написана причина
+            }
 
-			MessageBox.Show("Пользователь успешно зарегистрирован!", "Регистрация",
+            MessageBox.Show("Пользователь успешно зарегистрирован!", "Регистрация",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             NavigationService?.Navigate(new AuthPage());
         }
