@@ -31,43 +31,43 @@ namespace _323_Aleksyuk_EMK.Pages
             if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
             // 3. заполнены все поля
-            if (string.IsNullOrEmpty(PbCurrent.password) || string.IsNullOrEmpty(PbNew.password) ||
-                string.IsNullOrEmpty(PbConfirm.password))
+            if (string.IsNullOrEmpty(PbCurrent.Password) || string.IsNullOrEmpty(PbNew.Password) ||
+                string.IsNullOrEmpty(PbConfirm.Password))
             {
                 ErrorText.Text = "Все поля обязательны к заполнению!";
                 return;
             }
 
             // 4. текущий пароль верный (сравниваем хеши)
-            if (Security.GetHash(PbCurrent.password) != user.password)
+            if (Core.GetHash(PbCurrent.Password) != user.password)
             {
                 ErrorText.Text = "Текущий пароль неверный!";
                 return;
             }
 
             // новый пароль не должен совпадать с текущим
-            if (PbNew.password == PbCurrent.password)
+            if (PbNew.Password == PbCurrent.Password)
             {
                 ErrorText.Text = "Новый пароль не должен совпадать с текущим";
                 return;
             }
 
             // 5. корректность нового пароля (как на странице регистрации)
-            string passError = Security.ValidatePassword(PbNew.password);
+            string passError = Core.ValidatePassword(PbNew.Password);
             if (passError != null)
             {
                 ErrorText.Text = passError;
                 return;
             }
 
-            if (PbNew.password != PbConfirm.password)
+            if (PbNew.Password != PbConfirm.Password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;
             }
 
             // 6. сохраняем хеш нового пароля
-            user.password = Security.GetHash(PbNew.password);
+            user.password = Core.GetHash(PbNew.Password);
             Entities.GetContext().SaveChanges();
             MessageBox.Show("Пароль успешно изменен!");
             NavigationService?.GoBack();

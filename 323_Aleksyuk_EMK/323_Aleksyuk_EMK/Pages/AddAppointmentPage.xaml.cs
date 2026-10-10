@@ -32,7 +32,7 @@ namespace _323_Aleksyuk_EMK.Pages
             // Пациенты: администратор видит всех, пользователь - только себя
             if (session.IsAdmin)
             {
-                CbPatient.ItemsSource = ctx.Patients.ToList().OrderBy(p => p.fio).ToList();
+                CbPatient.ItemsSource = ctx.patient.ToList().OrderBy(p => p.fio).ToList();
             }
             else
             {
@@ -46,7 +46,7 @@ namespace _323_Aleksyuk_EMK.Pages
             var now = DateTime.Now;
             int currentSlotId = _current != null ? _current.schedule_id : 0;
             CbSlot.ItemsSource = ctx.Schedules.ToList()
-                .Where(s => (s.Status == "Свободно" && s.SlotTime >= now) || s.ID == currentSlotId)
+                .Where(s => (s.Status == "Свободно" && s.SlotTime >= now) || s.id == currentSlotId)
                 .OrderBy(s => s.SlotTime)
                 .ToList();
 
@@ -55,8 +55,8 @@ namespace _323_Aleksyuk_EMK.Pages
             if (_current != null)
             {
                 TbTitle.Text = "Изменение приёма";
-                CbPatient.SelectedItem = ((IEnumerable<patient>)CbPatient.ItemsSource).FirstOrDefault(p => p.ID == _current.PatientID);
-                CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource).FirstOrDefault(s => s.ID == _current.schedule_id);
+                CbPatient.SelectedItem = ((IEnumerable<patient>)CbPatient.ItemsSource).FirstOrDefault(p => p.id == _current.patient);
+                CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource).FirstOrDefault(s => s.id == _current.schedule_id);
                 foreach (ComboBoxItem item in CbStatus.Items)
                     if (item.Content.ToString() == _current.status) CbStatus.SelectedItem = item;
             }

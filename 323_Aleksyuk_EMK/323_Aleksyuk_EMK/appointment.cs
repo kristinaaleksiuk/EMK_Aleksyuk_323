@@ -28,6 +28,5 @@ namespace _323_Aleksyuk_EMK
         public virtual patient patient { get; set; }
         public virtual schedule schedule { get; set; }
         public virtual ICollection<visit> visit { get; set; }
-       
     }
 }

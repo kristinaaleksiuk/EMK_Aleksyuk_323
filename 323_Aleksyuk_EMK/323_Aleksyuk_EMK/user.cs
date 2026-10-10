@@ -17,7 +17,6 @@ namespace _323_Aleksyuk_EMK
         public int id { get; set; }
         public string login { get; set; }
         public string password { get; set; }
-        public string Role { get; set; }
         public string fio { get; set; }
         public string photo { get; set; }
         public Nullable<int> doctor_id { get; set; }
@@ -26,6 +25,7 @@ namespace _323_Aleksyuk_EMK
         public bool is_active { get; set; }
         public System.DateTime created_at { get; set; }
         public Nullable<System.DateTime> last_login { get; set; }
+        public string role { get; set; }
     
         public virtual doctor doctor { get; set; }
         public virtual patient patient { get; set; }

@@ -37,7 +37,7 @@
 
         <DataGrid Grid.Row="2" x:Name="DgUsers">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="60" />
+                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="60" />
                 <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="*" />
                 <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="2*" />
                 <DataGridTextColumn Header="Роль" Binding="{Binding Role}" Width="*" />

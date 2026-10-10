@@ -39,7 +39,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // 4. текущий пароль верный (сравниваем хеши)
-            if (Security.GetHash(PbCurrent.Password) != user.Password)
+            if (Core.GetHash(PbCurrent.Password) != user.Password)
             {
                 ErrorText.Text = "Текущий пароль неверный!";
                 return;
@@ -53,7 +53,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // 5. корректность нового пароля (как на странице регистрации)
-            string passError = Security.ValidatePassword(PbNew.Password);
+            string passError = Core.ValidatePassword(PbNew.Password);
             if (passError != null)
             {
                 ErrorText.Text = passError;
@@ -67,7 +67,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // 6. сохраняем хеш нового пароля
-            user.Password = Security.GetHash(PbNew.Password);
+            user.Password = Core.GetHash(PbNew.Password);
             Entities.GetContext().SaveChanges();
             MessageBox.Show("Пароль успешно изменен!");
             NavigationService?.GoBack();

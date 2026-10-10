@@ -30,7 +30,7 @@ namespace _323_Aleksyuk_EMK
         {
             // 6.1 проверка заполнения полей
             if (string.IsNullOrWhiteSpace(TbLogin.Text) || string.IsNullOrWhiteSpace(TbFio.Text) ||
-                string.IsNullOrEmpty(PbFirst.password) || string.IsNullOrEmpty(PbSecond.password))
+                string.IsNullOrEmpty(PbFirst.Password) || string.IsNullOrEmpty(PbSecond.Password))
             {
                 ErrorText.Text = "Заполните все поля!";
                 return;
@@ -47,7 +47,7 @@ namespace _323_Aleksyuk_EMK
             }
 
             // 6.3 формат пароля: >= 6 символов, английская раскладка, есть цифра
-            string passError = Security.ValidatePassword(PbFirst.password);
+            string passError = Core.ValidatePassword(PbFirst.Password);
             if (passError != null)
             {
                 ErrorText.Text = passError;
@@ -55,7 +55,7 @@ namespace _323_Aleksyuk_EMK
             }
 
             // 6.4 пароли совпадают
-            if (PbFirst.password != PbSecond.password)
+            if (PbFirst.Password != PbSecond.Password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;
@@ -67,7 +67,7 @@ namespace _323_Aleksyuk_EMK
             {
                 fio = TbFio.Text.Trim(),
                 login = login,
-                password = Security.GetHash(PbFirst.password),
+                password = Core.GetHash(PbFirst.Password),
                 Role = Role
             };
             ctx.user.Add(user);
@@ -76,7 +76,7 @@ namespace _323_Aleksyuk_EMK
             // для роли User сразу создаём карточку пациента, чтобы можно было записываться на приём
             if (Role == "User")
             {
-                ctx.Patients.Add(new Patients { fio = user.fio, UserID = user.ID });
+                ctx.patient.Add(new patient { fio = user.fio, UserID = user.id });
                 ctx.SaveChanges();
             }
 

@@ -47,7 +47,7 @@ namespace _323_Aleksyuk_EMK.Pages
             if (role == "Admin" || role == "User")
                 list = list.Where(u => u.Role == role);
 
-            DgUsers.ItemsSource = list.OrderBy(u => u.ID).ToList();
+            DgUsers.ItemsSource = list.OrderBy(u => u.id).ToList();
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -70,29 +70,31 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            var selected = DgUsers.SelectedItem as Users;
+            var selected = DgUsers.SelectedItem as user;
             if (selected == null) { MessageBox.Show("Выберите пользователя в таблице."); return; }
 
-            if (Session.CurrentUser != null && selected.ID == Session.CurrentUser.ID)
+            if (Session.CurrentUser == null || selected.id != Session.CurrentUser.id)
+            {
+                if (MessageBox.Show("Вы точно хотите удалить пользователя «" + selected.FIO + "»?\nБудут удалены связанные пациенты и приёмы.",
+                        "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    return;
+
+                try
+                {
+                    DbOps.DeleteUser(selected);                // каскадное удаление
+                    Entities.GetContext().SaveChanges();
+                    MessageBox.Show("Данные успешно удалены!");
+                    UpdateList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
             {
                 MessageBox.Show("Нельзя удалить учётную запись, под которой вы вошли.");
                 return;
-            }
-
-            if (MessageBox.Show("Вы точно хотите удалить пользователя «" + selected.FIO + "»?\nБудут удалены связанные пациенты и приёмы.",
-                    "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                return;
-
-            try
-            {
-                DbOps.DeleteUser(selected);                // каскадное удаление
-                Entities.GetContext().SaveChanges();
-                MessageBox.Show("Данные успешно удалены!");
-                UpdateList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
         }
     }

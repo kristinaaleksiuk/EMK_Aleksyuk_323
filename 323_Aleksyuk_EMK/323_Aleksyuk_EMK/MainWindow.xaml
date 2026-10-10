@@ -15,6 +15,10 @@
         Closing="Window_Closing">
     <!-- Шаг 2: Grid из трёх строк: 45 / * / 45 -->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="33*"/>
+            <ColumnDefinition Width="217*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="45" />
             <RowDefinition Height="*" />
@@ -23,7 +27,7 @@
 
         <!-- Верхняя панель: Назад / заголовок страницы / Сменить тему + бирюзовая линия -->
         <Border Grid.Row="0" Background="{DynamicResource PanelBackground}"
-                BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,3">
+                BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,3" Grid.ColumnSpan="2">
             <Grid>
                 <Button x:Name="BackButton" Content="Назад" HorizontalAlignment="Left"
                         Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
@@ -40,10 +44,10 @@
 
         <!-- Шаг 2, п. 3-4: Frame для страниц, навигационная строка скрыта -->
         <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"
-               Background="{DynamicResource PageBackground}" />
+               Background="{DynamicResource PageBackground}" Grid.ColumnSpan="2" />
 
         <!-- Нижняя панель: название приложения слева, дата и время справа -->
-        <Border Grid.Row="2" Background="{DynamicResource PanelBackground}">
+        <Border Grid.Row="1" Background="{DynamicResource PanelBackground}" Grid.ColumnSpan="2" Margin="0,534,0,0" Grid.RowSpan="2">
             <Grid Margin="16,0">
                 <TextBlock Text="Приём и ведение ЭМК" VerticalAlignment="Center"
                            Foreground="{DynamicResource PrimaryBrush}" />

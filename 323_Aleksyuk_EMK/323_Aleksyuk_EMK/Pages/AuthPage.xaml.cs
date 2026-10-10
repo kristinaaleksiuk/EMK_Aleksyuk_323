@@ -3,7 +3,7 @@ using DurableTask.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Core.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using static System.Collections.Specialized.BitVector32;
+using System.Web.Providers.Entities;
 namespace _323_Aleksyuk_EMK.Pages
 {
     /// <summary>Шаги 4-5: авторизация + капча.
@@ -43,7 +44,7 @@ namespace _323_Aleksyuk_EMK.Pages
             if (lockLeft > 0) return;
             ErrorText.Text = "";
 
-            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.password))
+            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.Password))
             {
                 ErrorText.Text = "Введите логин и пароль";
                 return;
@@ -57,7 +58,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            string hashedPassword = Security.GetHash(PbPassword.password);   // Шаг 7
+            string hashedPassword = Core.GetHash(PbPassword.Password);   // Шаг 7
             var user = Entities.GetContext().user.AsNoTracking()
                 .FirstOrDefault(u => u.login == TbLogin.Text && u.password == hashedPassword);
 
@@ -75,10 +76,10 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // Успешный вход: берём отслеживаемую запись пользователя
-            Session.CurrentUser = Entities.GetContext().user.First(u => u.ID == user.ID);
+            Session.CurrentUser = Entities.GetContext().user.First(u => u.id == user.id);
             failedAttempts = 0;
 
-            switch (user.Role)
+            switch (user.role)
             {
                 case "Admin":
                     NavigationService?.Navigate(new AdminPage());

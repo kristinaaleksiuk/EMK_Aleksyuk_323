@@ -59,16 +59,16 @@ namespace _323_Aleksyuk_EMK.Pages
             if (CbRole.SelectedItem == null) { ErrorText.Text = "Выберите роль!"; return; }
 
             int selfId = _current != null ? _current.id : 0;
-            if (ctx.user.Any(u => u.login == login && u.ID != selfId))
+            if (ctx.user.Any(u => u.login == login && u.id != selfId))
             {
                 ErrorText.Text = "Пользователь с таким логином уже существует!";
                 return;
             }
 
-            bool needPassword = _current == null || PbPass.password.Length > 0;
+            bool needPassword = _current == null || PbPass.Password.Length > 0;
             if (needPassword)
             {
-                string passError = Security.ValidatePassword(PbPass.password);
+                string passError = Core.ValidatePassword(PbPass.Password);
                 if (passError != null) { ErrorText.Text = passError; return; }
             }
 
@@ -83,16 +83,16 @@ namespace _323_Aleksyuk_EMK.Pages
                     {
                         fio = fio,
                         login = login,
-                        Role = Role,
+                        role = role,
                         photo = photo,
-                        password = Security.GetHash(PbPass.password)
+                        password = Core.GetHash(PbPass.Password)
                     };
                     ctx.user.Add(user);
                     ctx.SaveChanges();
 
                     if (Role == "User")
                     {
-                        ctx.Patients.Add(new patient { fio = fio, user = user });
+                        ctx.patient.Add(new patient { fio = fio, user = user });
                         ctx.SaveChanges();
                     }
                 }
@@ -100,10 +100,10 @@ namespace _323_Aleksyuk_EMK.Pages
                 {
                     _current.fio = fio;
                     _current.login = login;
-                    _current.Role = Role;
+                    _current.role = role;
                     _current.photo = photo;
                     if (needPassword)
-                        _current.password = Security.GetHash(PbPass.password);
+                        _current.password = Core.GetHash(PbPass.Password);
                     ctx.SaveChanges();
                 }
 

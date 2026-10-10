@@ -35,12 +35,12 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             if (!IsInitialized) return;
 
-            var list = Entities.GetContext().Patients.ToList().AsEnumerable();
+            var list = Entities.GetContext().patient.ToList().AsEnumerable();
             string q = TbSearch.Text.Trim().ToLower();
             if (q.Length > 0)
                 list = list.Where(p => p.FIO.ToLower().Contains(q) || (p.Phone ?? "").ToLower().Contains(q));
 
-            DgPatients.ItemsSource = list.OrderBy(p => p.ID).ToList();
+            DgPatients.ItemsSource = list.OrderBy(p => p.id).ToList();
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e) { TbSearch.Text = ""; }

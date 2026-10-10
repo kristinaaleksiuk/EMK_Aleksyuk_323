@@ -22,10 +22,10 @@
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <!-- Диаграмма Chart в WindowsFormsHost -->
+            <!-- Диаграмма Chart в WindowsFormsHost --><!--
             <wfi:WindowsFormsHost Grid.Column="0" Margin="0,0,16,0">
                 <charts:Chart x:Name="ChartMain" BackColor="White" />
-            </wfi:WindowsFormsHost>
+            </wfi:WindowsFormsHost>-->
 
             <StackPanel Grid.Column="1" Margin="8,0,0,0">
                 <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" />

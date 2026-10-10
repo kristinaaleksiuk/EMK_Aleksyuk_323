@@ -28,7 +28,7 @@
 
         <DataGrid Grid.Row="2" x:Name="DgPatients">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="60" />
+                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="60" />
                 <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="2*" />
                 <DataGridTextColumn Header="Дата рождения" Binding="{Binding BirthText}" Width="*" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="*" />

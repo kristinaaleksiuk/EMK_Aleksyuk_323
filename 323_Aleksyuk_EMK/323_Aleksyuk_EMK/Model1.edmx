@@ -110,7 +110,7 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="password" Type="nvarchar" MaxLength="64" Nullable="false" />
-          <Property Name="Role" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="role" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="photo" Type="nvarchar" MaxLength="200" />
           <Property Name="doctor_id" Type="int" />
@@ -542,7 +542,6 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="password" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Role" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="photo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="doctor_id" Type="Int32" />
@@ -553,6 +552,7 @@
           <Property Name="last_login" Type="DateTime" Precision="3" />
           <NavigationProperty Name="doctor" Relationship="Self.FK_user_doctor" FromRole="user" ToRole="doctor" />
           <NavigationProperty Name="patient" Relationship="Self.FK_user_patient" FromRole="user" ToRole="patient" />
+          <Property Name="role" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="visit">
           <Key>
@@ -824,7 +824,7 @@
         <ComplexType Name="sp_helpdiagrams_Result">
           <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
@@ -945,10 +945,10 @@
           <EntitySetMapping Name="user">
             <EntityTypeMapping TypeName="EMK_ALEKSUKModel.user">
               <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="role" ColumnName="role" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="login" ColumnName="login" />
                 <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="fio" ColumnName="fio" />
                 <ScalarProperty Name="photo" ColumnName="photo" />
                 <ScalarProperty Name="doctor_id" ColumnName="doctor_id" />
@@ -995,7 +995,7 @@
               <ComplexTypeMapping TypeName="EMK_ALEKSUKModel.sp_helpdiagrams_Result">
                 <ScalarProperty Name="Database" ColumnName="Database" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="Owner" ColumnName="Owner" />
                 <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
               </ComplexTypeMapping>

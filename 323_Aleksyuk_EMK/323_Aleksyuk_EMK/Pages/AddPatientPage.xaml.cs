@@ -20,9 +20,9 @@ namespace _323_Aleksyuk_EMK.Pages
     /// <summary>Форма добавления / редактирования пациента</summary>
     public partial class AddPatientPage : Page
     {
-        private readonly Patients _current;
+        private readonly patient _current;
 
-        public AddPatientPage(Patients selected)
+        public AddPatientPage(patient selected)
         {
             InitializeComponent();
             _current = selected;
@@ -48,7 +48,7 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 if (_current == null)
                 {
-                    ctx.Patients.Add(new Patients
+                    ctx.patient.Add(new patient
                     {
                         fio = fio,
                         BirthDate = DpBirth.SelectedDate,

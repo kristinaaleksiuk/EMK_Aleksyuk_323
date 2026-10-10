@@ -35,8 +35,8 @@ namespace _323_Aleksyuk_EMK.Pages
         TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.login;
         PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
 
-        int uid = user.ID;
-        var patientIds = ctx.Patients.Where(p => p.UserID == uid).Select(p => p.ID).ToList();
+        int uid = user.id;
+        var patientIds = ctx.patient.Where(p => p.UserID == uid).Select(p => p.id).ToList();
         DgAppointments.ItemsSource = ctx.appointment
             .Where(a => patientIds.Contains(a.PatientID))
             .ToList()
