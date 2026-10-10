@@ -31,8 +31,8 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 TbTitle.Text = "Изменение пациента";
                 TbFio.Text = _current.fio;
-                DpBirth.SelectedDate = _current.BirthDate;
-                TbPhone.Text = _current.Phone;
+                DpBirth.SelectedDate = _current.birth_date;
+                TbPhone.Text = _current.phone;
             }
         }
 
@@ -43,23 +43,23 @@ namespace _323_Aleksyuk_EMK.Pages
             if (DpBirth.SelectedDate.HasValue && DpBirth.SelectedDate.Value > DateTime.Today)
             { ErrorText.Text = "Дата рождения не может быть в будущем!"; return; }
 
-            var Core.DB = Entities.GetContext();
-            try
+			var ctx = Core.DB;
+			try
             {
                 if (_current == null)
                 {
                     Core.DB.patient.Add(new patient
                     {
                         fio = fio,
-                        birth_date = DpBirth.SelectedDate,
-                        phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim()
+						birth_date = DpBirth.SelectedDate.Value,
+						phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim()
                     });
                 }
                 else
                 {
                     _current.fio = fio;
-                    _current.birth_date = DpBirth.SelectedDate;
-                    _current.phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim();
+					_current.birth_date = DpBirth.SelectedDate.Value;
+					_current.phone = string.IsNullOrWhiteSpace(TbPhone.Text) ? null : TbPhone.Text.Trim();
                 }
                 Core.DB.SaveChanges();
                 MessageBox.Show("Данные успешно сохранены!");

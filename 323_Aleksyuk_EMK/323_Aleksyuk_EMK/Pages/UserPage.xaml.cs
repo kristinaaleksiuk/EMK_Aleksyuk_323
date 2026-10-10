@@ -28,20 +28,20 @@ namespace _323_Aleksyuk_EMK.Pages
         var user = Core.CurrentUser;
         if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
-        var Core.DB = Entities.GetContext();
-        Core.DB.Refresh();
+        var ctx = Core.DB;
+
 
         TbName.Text = user.fio;
-        TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.login;
-        PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
+        TbInfo.Text = "Роль: " + user.role + "  |  Логин: " + user.login;
+        //PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.photo);
 
         int uid = user.id;
-        var patientIds = Core.DB.patient.Where(p => p.UserID == uid).Select(p => p.id).ToList();
-        DgAppointments.ItemsSource = Core.DB.appointment
-            .Where(a => patientIds.Contains(a.PatientID))
+			var patientIds = Core.DB.patient.Where(p => p.id == uid).Select(p => p.id).ToList();
+			DgAppointments.ItemsSource = Core.DB.appointment
+            .Where(a => patientIds.Contains(a.patient_id))
             .ToList()
-            .OrderByDescending(a => a.Date)
-            .ToList();
+			.OrderByDescending(a => a.schedule.visit_date)
+			.ToList();
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)

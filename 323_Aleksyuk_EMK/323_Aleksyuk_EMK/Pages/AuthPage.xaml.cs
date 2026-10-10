@@ -58,7 +58,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             string hashedPassword = Core.GetHash(PbPassword.Password);   // Шаг 7
-            var user = Entities.GetContext().user.AsNoTracking()
+            var user = Core.DB.user.AsNoTracking()
                 .FirstOrDefault(u => u.login == TbLogin.Text && u.password == hashedPassword);
 
             if (user == null)
@@ -75,7 +75,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
 
             // Успешный вход: берём отслеживаемую запись пользователя
-            Core.CurrentUser = Entities.GetContext().user.First(u => u.id == user.id);
+            Core.CurrentUser = Core.DB.user.First(u => u.id == user.id);
             failedAttempts = 0;
 
             switch (user.role)
@@ -87,7 +87,7 @@ namespace _323_Aleksyuk_EMK.Pages
                     NavigationService?.Navigate(new UserPage());
                     break;
                 default:
-                    ErrorText.Text = "Для роли «" + user.Role + "» страница не предусмотрена";
+                    ErrorText.Text = "Для роли «" + user.role + "» страница не предусмотрена";
                     break;
             }
         }

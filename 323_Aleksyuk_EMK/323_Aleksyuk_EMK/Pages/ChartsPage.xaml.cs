@@ -21,7 +21,7 @@
 //    /// <summary>Шаги 12-14: диаграмма по данным БД и экспорт отчётов в Word / Excel / PDF</summary>
 //    public partial class ChartsPage : Page
 //    {
-//        private readonly Entities _context = Entities.GetContext();
+//        private readonly Entities _context = Core.DB();
 
 //        public ChartsPage()
 //        {

@@ -25,7 +25,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Entities.GetContext().Refresh();
+            //Core.DB().Refresh();
             UpdateList();
         }
 
@@ -35,10 +35,10 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             if (!IsInitialized) return;
 
-            var list = Entities.GetContext().patient.ToList().AsEnumerable();
+            var list = Core.DB.patient.ToList().AsEnumerable();
             string q = TbSearch.Text.Trim().ToLower();
             if (q.Length > 0)
-                list = list.Where(p => p.FIO.ToLower().Contains(q) || (p.Phone ?? "").ToLower().Contains(q));
+                list = list.Where(p => p.fio.ToLower().Contains(q) || (p.phone ?? "").ToLower().Contains(q));
 
             DgPatients.ItemsSource = list.OrderBy(p => p.id).ToList();
         }
@@ -62,14 +62,14 @@ namespace _323_Aleksyuk_EMK.Pages
             var selected = DgPatients.SelectedItem as patient;
             if (selected == null) { MessageBox.Show("Выберите пациента в таблице."); return; }
 
-            if (MessageBox.Show("Вы точно хотите удалить пациента «" + selected.FIO + "»?\nБудут удалены его приёмы.",
+            if (MessageBox.Show("Вы точно хотите удалить пациента «" + selected.fio + "»?\nБудут удалены его приёмы.",
                     "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
             try
             {
-                DbOps.DeletePatient(selected);
-                Entities.GetContext().SaveChanges();
+                Core.DB.patient.Remove(selected);
+                Core.DB.SaveChanges();
                 MessageBox.Show("Данные успешно удалены!");
                 UpdateList();
             }

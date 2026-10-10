@@ -35,11 +35,17 @@ namespace _323_Aleksyuk_EMK.Pages
             // Закомментировали строку с фото, так как оно необязательно
             // PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.photo);
         }
-        private void BtnUsers_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new UsersPage()); }
-        private void BtnPatients_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new PatientsPage()); }
-        private void BtnAppointments_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new AddAppointmentPage()); }
-        private void BtnCharts_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new ChartsPage()); }
-        private void BtnChangePass_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new ChangePassPage()); }
-        private void BtnLogout_Click(object sender, RoutedEventArgs e) { NavigationService?.Navigate(new AuthPage()); }
+        private void BtnUsers_Click(object sender, RoutedEventArgs e) 
+        { NavigationService?.Navigate(new UsersPage()); }
+        private void BtnPatients_Click(object sender, RoutedEventArgs e)
+        { NavigationService?.Navigate(new PatientsPage()); }
+        private void BtnAppointments_Click(object sender, RoutedEventArgs e) 
+        { NavigationService?.Navigate(new AddAppointmentPage(null)); }
+        private void BtnCharts_Click(object sender, RoutedEventArgs e) 
+        { NavigationService?.Navigate(new ChartsPage()); }
+        private void BtnChangePass_Click(object sender, RoutedEventArgs e) 
+        { NavigationService?.Navigate(new ChangePassPage()); }
+        private void BtnLogout_Click(object sender, RoutedEventArgs e) 
+        { NavigationService?.Navigate(new AuthPage()); }
     }
 }

@@ -22,28 +22,24 @@
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <!-- Диаграмма Chart в WindowsFormsHost --><!--
-            <wfi:WindowsFormsHost Grid.Column="0" Margin="0,0,16,0">
-                <charts:Chart x:Name="ChartMain" BackColor="White" />
-            </wfi:WindowsFormsHost>-->
 
             <StackPanel Grid.Column="1" Margin="8,0,0,0">
                 <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CmbDoctor" DisplayMemberPath="FIO" ToolTip="Выберите врача"
-                          SelectionChanged="UpdateChart" />
+                <!--<ComboBox x:Name="CmbDoctor" DisplayMemberPath="FIO" ToolTip="Выберите врача"
+                          SelectionChanged="UpdateChart" />-->
 
                 <TextBlock Text="Тип диаграммы" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CmbType" DisplayMemberPath="Key" SelectedValuePath="Value"
-                          ToolTip="Выберите тип диаграммы" SelectionChanged="UpdateChart" />
+                <!--<ComboBox x:Name="CmbType" DisplayMemberPath="Key" SelectedValuePath="Value"
+                          ToolTip="Выберите тип диаграммы" SelectionChanged="UpdateChart" />-->
             </StackPanel>
         </Grid>
 
         <StackPanel Grid.Row="2">
             <TextBlock Text="Экспорт" Style="{StaticResource SectionTitle}" Margin="0,8,0,4" />
             <StackPanel Orientation="Horizontal">
-                <Button Content="В Word" ToolTip="Выгрузить отчёт в Microsoft Word" Click="BtnWord_Click" />
+                <!--<Button Content="В Word" ToolTip="Выгрузить отчёт в Microsoft Word" Click="BtnWord_Click" />
                 <Button Content="В Excel" ToolTip="Выгрузить таблицу в Microsoft Excel" Click="BtnExcel_Click" />
-                <Button Content="В PDF" ToolTip="Сохранить отчёт в формате PDF" Click="BtnPdf_Click" />
+                <Button Content="В PDF" ToolTip="Сохранить отчёт в формате PDF" Click="BtnPdf_Click" />-->
             </StackPanel>
         </StackPanel>
     </Grid>

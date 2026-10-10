@@ -36,7 +36,7 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-            var Core.DB = Entities.GetContext();
+            var ctx = Core.DB;
 
             // 6.2 логин должен быть уникальным
             string login = TbLogin.Text.Trim();
@@ -46,16 +46,15 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-            // 6.3 формат пароля: >= 6 символов, английская раскладка, есть цифра
-            string passError = Core.ValidatePassword(PbFirst.Password);
-            if (passError != null)
-            {
-                ErrorText.Text = passError;
-                return;
-            }
+			// 6.3 формат пароля: проверка длины
+			if (PbFirst.Password.Length < 6)
+			{
+				ErrorText.Text = "Пароль должен быть не менее 6 символов!";
+				return;
+			}
 
-            // 6.4 пароли совпадают
-            if (PbFirst.Password != PbSecond.Password)
+			// 6.4 пароли совпадают
+			if (PbFirst.Password != PbSecond.Password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;

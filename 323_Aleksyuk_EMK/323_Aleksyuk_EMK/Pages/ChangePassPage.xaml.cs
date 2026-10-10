@@ -68,7 +68,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
             // 6. сохраняем хеш нового пароля
             user.password = Core.GetHash(PbNew.Password);
-            Entities.GetContext().SaveChanges();
+            Core.DB.SaveChanges();
             MessageBox.Show("Пароль успешно изменен!");
             NavigationService?.GoBack();
         }
