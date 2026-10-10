@@ -309,7 +309,6 @@
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="ThemeManager.cs" />
     <Compile Include="user.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

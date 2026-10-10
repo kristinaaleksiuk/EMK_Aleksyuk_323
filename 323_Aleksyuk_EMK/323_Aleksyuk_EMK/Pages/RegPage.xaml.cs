@@ -67,7 +67,9 @@ namespace _323_Aleksyuk_EMK
                 fio = TbFio.Text.Trim(),
                 login = login,
                 password = Core.GetHash(PbFirst.Password),
-                role = role
+                role = role,
+                created_at = DateTime.Now, // Передаем текущую дату создания
+                is_active = true
             };
             Core.DB.user.Add(user);
             Core.DB.SaveChanges();
