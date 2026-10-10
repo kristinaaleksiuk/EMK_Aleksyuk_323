@@ -1,87 +1,62 @@
-﻿//using DurableTask.Core.Common;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using System.Windows;
-//using System.Windows.Controls;
-//using System.Windows.Data;
-//using System.Windows.Documents;
-//using System.Windows.Input;
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-//using System.Windows.Navigation;
-//using System.Windows.Shapes;
+﻿using DurableTask.Core.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-//namespace _323_Aleksyuk_EMK.Pages
-//{
-//    /// <summary>
-//    /// Логика взаимодействия для UserPage.xaml
-//    /// </summary>
-//    public partial class UserPage : Page
-//    {
-//        // Инициализируем контекст (имя класса проверьте в Model1.Context.cs!)
-//        private EMKEntities Context = new EMKEntities();
+namespace _323_Aleksyuk_EMK.Pages
+{
+    public partial class UserPage : Page
+{
+    public UserPage()
+    {
+        InitializeComponent();
+    }
 
-//        public UserPage()
-//        {
-//            InitializeComponent();
-//            LoadComboBoxData(); // Заполнение фильтров
-//            RefreshData();
-//        }
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+        var user = Session.CurrentUser;
+        if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 
-//        private void LoadComboBoxData()
-//        {
-//            // Фильтр, например, по Категориям
-//            var categories = EMKEntities.categoris.ToList();
-//            categories.Insert(0, new Category { Name = "Все категории" });
-//            ComboFilter.ItemsSource = categories;
-//            ComboFilter.SelectedIndex = 0;
+        var ctx = Entities.GetContext();
+        ctx.Refresh();
 
-//            // Комбобокс для сортировки
-//            ComboSort.ItemsSource = new string[] { "Без сортировки", "По возрастанию цены", "По убыванию цены" };
-//            ComboSort.SelectedIndex = 0;
-//        }
+        TbName.Text = user.FIO;
+        TbInfo.Text = "Роль: " + user.Role + "  |  Логин: " + user.Login;
+        PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.Photo);
 
-//        private void RefreshData()
-//        {
-//            // 1. Берем исходный список из БД (например, Products)
-//            var currentData = _context.Products.ToList();
+        int uid = user.ID;
+        var patientIds = ctx.Patients.Where(p => p.UserID == uid).Select(p => p.ID).ToList();
+        DgAppointments.ItemsSource = ctx.Appointments
+            .Where(a => patientIds.Contains(a.PatientID))
+            .ToList()
+            .OrderByDescending(a => a.Date)
+            .ToList();
+    }
 
-//            // 2. ПОИСК (по названию или описанию)
-//            if (!string.IsNullOrWhiteSpace(TxtSearch.Text))
-//            {
-//                string search = TxtSearch.Text.ToLower();
-//                currentData = currentData.Where(p => p.Name.ToLower().Contains(search) ||
-//                                                     p.Description.ToLower().Contains(search)).ToList();
-//            }
+    private void BtnAdd_Click(object sender, RoutedEventArgs e)
+    {
+        NavigationService?.Navigate(new AddAppointmentPage(null));
+    }
 
-//            // 3. ФИЛЬТРАЦИЯ
-//            if (ComboFilter.SelectedIndex > 0)
-//            {
-//                var selectedCategory = ComboFilter.SelectedItem as Category;
-//                currentData = currentData.Where(p => p.CategoryID == selectedCategory.ID).ToList();
-//            }
+    private void BtnChangePass_Click(object sender, RoutedEventArgs e)
+    {
+        NavigationService?.Navigate(new ChangePasswordPage());
+    }
 
-//            // 4. СОРТИРОВКА
-//            switch (ComboSort.SelectedIndex)
-//            {
-//                case 1:
-//                    currentData = currentData.OrderBy(p => p.Price).ToList();
-//                    break;
-//                case 2:
-//                    currentData = currentData.OrderByDescending(p => p.Price).ToList();
-//                    break;
-//            }
-
-//            // Назначаем отфильтрованный список в ваш DataGrid
-//            MainDataGrid.ItemsSource = currentData;
-//        }
-
-//        // Навешиваем вызов RefreshData на события изменения элементов интерфейса
-//        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e) => RefreshData();
-//        private void ComboFilter_SelectionChanged(object sender, SelectionChangedEventArgs e) => RefreshData();
-//        private void ComboSort_SelectionChanged(object sender, SelectionChangedEventArgs e) => RefreshData();
-//    }
-//}
+    private void BtnLogout_Click(object sender, RoutedEventArgs e)
+    {
+        NavigationService?.Navigate(new AuthPage());
+    }
+}
+}

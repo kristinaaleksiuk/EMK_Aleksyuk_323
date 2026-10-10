@@ -5,29 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_323_Aleksyuk_EMK"
         mc:Ignorable="d"
-        Title="Приём и ведение ЭМК" 
-        Height="600" Width="900"
-        MinHeight="500" MinWidth="800"
-        Loaded="Window_Loaded" Closing="Window_Closing">
-    
+              Title="Приём и ведение ЭМК"
+        Width="1000" Height="640" MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="{DynamicResource AppFont}"
+        Foreground="{DynamicResource TextBrush}"
+        Background="{DynamicResource PageBackground}"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <!-- Шаг 2: Grid из трёх строк: 45 / * / 45 -->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="45" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="45" />
         </Grid.RowDefinitions>
 
-        <Button x:Name="BtnBack" Content="Назад" HorizontalAlignment="Left"
-                ToolTip="Вернуться на предыдущую страницу"
-                Click="BtnBack_Click" Width="81"/>
+        <!-- Верхняя панель: Назад / заголовок страницы / Сменить тему + бирюзовая линия -->
+        <Border Grid.Row="0" Background="{DynamicResource PanelBackground}"
+                BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,3">
+            <Grid>
+                <Button x:Name="BackButton" Content="Назад" HorizontalAlignment="Left"
+                        Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                        ToolTip="Вернуться на предыдущую страницу" Click="BackButton_Click"
+                        Visibility="Hidden" />
+                <TextBlock x:Name="TitleText" Text="ЭМК" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" FontWeight="Bold" FontSize="14"
+                           Foreground="{DynamicResource PrimaryBrush}" />
+                <Button x:Name="ThemeButton" Content="Сменить тему" HorizontalAlignment="Right"
+                        Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
+                        ToolTip="Переключить словарь стилей" Click="ThemeButton_Click" />
+            </Grid>
+        </Border>
 
-        <Frame x:Name="MainFrame" Grid.Row="1"
-               NavigationUIVisibility="Hidden"
-               Navigated="MainFrame_Navigated"/>
+        <!-- Шаг 2, п. 3-4: Frame для страниц, навигационная строка скрыта -->
+        <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"
+               Background="{DynamicResource PageBackground}" />
 
-        <TextBlock x:Name="DateTimeNow" Grid.Row="2"
-                   HorizontalAlignment="Right" VerticalAlignment="Center"
-                   Margin="0,0,15,0" ToolTip="Текущая дата и время"/>
-
+        <!-- Нижняя панель: название приложения слева, дата и время справа -->
+        <Border Grid.Row="2" Background="{DynamicResource PanelBackground}">
+            <Grid Margin="16,0">
+                <TextBlock Text="Приём и ведение ЭМК" VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryBrush}" />
+                <TextBlock x:Name="DateTimeNow" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Foreground="{DynamicResource PrimaryBrush}" />
+            </Grid>
+        </Border>
     </Grid>
 </Window>

@@ -6,9 +6,29 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ChangePassPage">
+       Title="ЭМК — Смена пароля">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="340" Margin="0,16">
+            <TextBlock Text="Смена пароля" Style="{StaticResource TitleText}" />
 
-    <Grid>
-        
-    </Grid>
+            <StackPanel Width="260">
+                <TextBlock Text="Текущий пароль" Style="{StaticResource FieldLabel}" />
+                <PasswordBox x:Name="PbCurrent" ToolTip="Введите текущий пароль" />
+
+                <TextBlock Text="Новый пароль" Style="{StaticResource FieldLabel}" />
+                <PasswordBox x:Name="PbNew" ToolTip="Введите новый пароль" />
+
+                <TextBlock Text="Повтор нового пароля" Style="{StaticResource FieldLabel}" />
+                <PasswordBox x:Name="PbConfirm" ToolTip="Повторите новый пароль" />
+            </StackPanel>
+
+            <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}"
+                       Text="Новый пароль: от 6 символов, английская раскладка, хотя бы одна цифра" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Сменить пароль" ToolTip="Сохранить новый пароль" Click="BtnChange_Click" />
+                <Button Content="Отмена" ToolTip="Вернуться назад" Style="{StaticResource SecondaryButton}" Click="BtnCancel_Click" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -6,9 +6,49 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Регистрация">
+        Title="ЭМК — Регистрация">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,16">
+            <TextBlock Text="Регистрация пользователя" Style="{StaticResource TitleText}" />
 
-    <Grid>
-        
-    </Grid>
+            <Grid Width="550">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Width="260" HorizontalAlignment="Left">
+                    <TextBlock Text="ФИО" Style="{StaticResource FieldLabel}" />
+                    <TextBox x:Name="TbFio" ToolTip="Введите фамилию, имя и отчество" />
+                    <TextBlock Text="Пароль (от 6 символов, цифра)" Style="{StaticResource FieldLabel}" />
+                    <PasswordBox x:Name="PbFirst" ToolTip="Введите пароль" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Width="260" HorizontalAlignment="Right">
+                    <TextBlock Text="Логин" Style="{StaticResource FieldLabel}" />
+                    <TextBox x:Name="TbLogin" ToolTip="Введите логин" />
+                    <TextBlock Text="Повтор пароля" Style="{StaticResource FieldLabel}" />
+                    <PasswordBox x:Name="PbSecond" ToolTip="Повторите пароль" />
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Width="260">
+                <TextBlock Text="Роль" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbRole" ToolTip="Выберите роль" SelectedIndex="0">
+                    <ComboBoxItem Content="User" />
+                    <ComboBoxItem Content="Admin" />
+                </ComboBox>
+            </StackPanel>
+
+            <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}"
+                       Text="Пароль должен содержать не менее 6 символов и цифру" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="BtnRegister" Content="Зарегистрироваться" ToolTip="Создать учётную запись"
+                        Click="BtnRegister_Click" />
+                <Button x:Name="BtnCancel" Content="Отмена" ToolTip="Вернуться к авторизации"
+                        Style="{StaticResource SecondaryButton}" Click="BtnCancel_Click" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -6,148 +6,43 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-        Title="Авторизация">
-    <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="Вход в систему" FontSize="22" FontWeight="Bold"
-                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+        Title="ЭМК — Авторизация" Unloaded="Page_Unloaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="330" Margin="0,16">
+            <TextBlock Text="Вход в систему" Style="{StaticResource TitleText}" />
 
-            <TextBlock Text="Логин" Margin="6,0,0,0"/>
-            <TextBox x:Name="TBLogin" MaxLength="50" ToolTip="Введите логин"/>
+            <StackPanel Width="260">
+                <TextBlock Text="Логин" Style="{StaticResource FieldLabel}" />
+                <TextBox x:Name="TbLogin" ToolTip="Введите логин" />
 
-            <TextBlock Text="Пароль" Margin="6,6,0,0"/>
-            <PasswordBox x:Name="PBPassword" MaxLength="50" ToolTip="Введите пароль"/>
+                <TextBlock Text="Пароль" Style="{StaticResource FieldLabel}" />
+                <PasswordBox x:Name="PbPassword" ToolTip="Введите пароль" />
 
-            <TextBlock x:Name="TBError" Foreground="#DD4842" Margin="6,4,0,0"
-                   TextWrapping="Wrap" Width="220"/>
+                <!-- Капча: появляется после первой неудачной попытки -->
+                <StackPanel x:Name="CaptchaPanel" Visibility="Collapsed">
+                    <TextBlock Text="Капча" Style="{StaticResource FieldLabel}" />
+                    <Border Background="{DynamicResource SecondaryBrush}"
+                            BorderBrush="{DynamicResource InputBorderBrush}" BorderThickness="1" Height="54">
+                        <TextBlock x:Name="CaptchaText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="26" FontStyle="Italic" FontWeight="Bold"
+                                   Foreground="{DynamicResource CaptchaTextBrush}"
+                                   TextDecorations="Strikethrough"
+                                   ToolTip="Капча нельзя скопировать - вводите вручную" />
+                    </Border>
+                    <TextBlock Text="Введите символы с картинки" Style="{StaticResource FieldLabel}" />
+                    <TextBox x:Name="TbCaptcha" ToolTip="Введите символы с картинки"
+                             ContextMenu="{x:Null}" />
+                </StackPanel>
+            </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
-                <Button x:Name="BtnLogin" Content="Войти" IsDefault="True" Click="BtnLogin_Click"/>
-                <Button x:Name="BtnReg" Content="Регистрация" Click="BtnReg_Click"/>
+            <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="ButtonEnter" Content="Войти" ToolTip="Кнопка входа" Click="ButtonEnter_Click"
+                        IsDefault="True" />
+                <Button x:Name="ButtonReg" Content="Регистрация" ToolTip="Кнопка регистрации"
+                        Style="{StaticResource SecondaryButton}" Click="ButtonReg_Click" />
             </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </Page>
-
-      <!--Title="AuthPage">-->
-
-    <!--<Grid>
-        <Grid HorizontalAlignment="Center" 
- Width="800" 
- Height="450" 
- VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="271*" />
-                <ColumnDefinition Width="529*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="217*" />
-                <RowDefinition Height="233*" />
-            </Grid.RowDefinitions>
-
-            <Label Content="Пароль" 
-     x:Name="labelPass" 
-     Margin="173,188,0,232" 
-     HorizontalAlignment="Left" 
-     Width="64" 
-     Grid.RowSpan="2" />
-            <TextBox x:Name="TextBoxLogin" 
-     Background="Transparent" 
-     Margin="62,0,0,75" 
-     TextWrapping="Wrap" 
-     ToolTip="Введите логин или почту" 
-     TextChanged="TextBoxLogin_TextChanged"
-     Height="34" 
-     VerticalAlignment="Bottom" 
-     HorizontalAlignment="Left" 
-     Width="134" 
-     Grid.Column="1" />
-            <PasswordBox x:Name="PasswordBox" 
-     Background="Transparent" 
-     ToolTip="Введите пароль" 
-     Margin="0,0,333,0" 
-     HorizontalAlignment="Right" 
-     Width="134" 
-     Height="32" 
-     VerticalAlignment="Bottom" 
-     Grid.Column="1" 
-     PasswordChanged="PasswordBox_PasswordChanged"/>
-            <Button x:Name="ButtonEnter" 
-     Margin="69,20,0,0" 
-     Height="34" 
-     Content="Вход" 
-     ToolTip="Кнопка входа" 
-     Grid.Row="1" 
-     HorizontalAlignment="Left" 
-     Width="120" 
-     VerticalAlignment="Top" 
-     Grid.Column="1" 
-     Click="ButtonEnter_OnClick" />
-            <Button x:Name="ButtonReg"
-     Margin="69,68,0,0" 
-     Height="37" 
-     Content="Регистрация" 
-     ToolTip="Кнопка регистрации" 
-     Grid.Row="1" 
-     HorizontalAlignment="Left" 
-     Width="120" 
-     VerticalAlignment="Top" 
-     Grid.Column="1" 
-     Click="ButtonReg_Click" />
-            <Button x:Name="ButtonChangePassword" 
-     Margin="69,120,0,0" 
-     Height="37" 
-     Content="Смена пароля" 
-     ToolTip="Кнопка смены пароля" 
-     Grid.Row="1" 
-     HorizontalAlignment="Left" 
-     Width="120" 
-     VerticalAlignment="Top" 
-     Grid.Column="1" 
-     Click="ButtonChangePassword_Click" />
-        </Grid>
-        <TextBox Grid.Column="1" 
-     CommandManager.PreviewExecuted="textBox_PreviewExecuted"  ContextMenu="{x:Null}" 
-     Visibility="Hidden" 
-     x:Name="captcha" 
-     Height="42" 
-     Foreground="Red" 
-     FontStyle="Italic" 
-     FontWeight="Heavy" 
-     VerticalAlignment="Top" 
-     Width="156" 
-     Background="{x:Null}" 
-     FontStretch="UltraCondensed" 
-     IsReadOnly="True" 
-     HorizontalContentAlignment="Center" 
-     HorizontalAlignment="Right" 
-     Margin="0,96,322,0" 
-     VerticalContentAlignment="Center" 
-     FontSize="20" />
-
-        <TextBox Grid.Column="1" 
-     Visibility="Hidden" 
-     x:Name="captchaInput" 
-     HorizontalAlignment="Left"  Height="34" 
-     Margin="49,183,0,0" 
-     TextWrapping="Wrap" 
-     Text="" 
-     VerticalAlignment="Top"  Width="160" />
-
-        <Button x:Name="submitCaptcha"  Margin="69,20,0,0" 
-     Visibility="Hidden" 
-     Height="34" 
-     Content="Подтвердить" 
-     ToolTip="Подтвердить ввод капчи"  Grid.Row="1" 
-     HorizontalAlignment="Left"  Width="120" 
-     VerticalAlignment="Top" 
-     Grid.Column="1" 
-     Click="submitCaptcha_Click" />
-        <Label Content="Капча:"
-     Name="labelCaptcha" 
-     Margin="116,104,0,87" 
-     HorizontalAlignment="Left" 
-     Width="116" />-->
-
-    <!--</Grid>
-</Page>-->

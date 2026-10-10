@@ -6,9 +6,31 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AdminPage">
+          Title="ЭМК — Администратор" Loaded="Page_Loaded">
+    <StackPanel Margin="24,16">
+        <StackPanel Orientation="Horizontal">
+            <Grid Width="96" Height="96">
+                <Ellipse Fill="{DynamicResource SecondaryBrush}" Stroke="{DynamicResource AccentBrush}" StrokeThickness="2" />
+                <Ellipse x:Name="PhotoEllipse" Margin="2" />
+                <TextBlock x:Name="PhotoHint" Text="Фото" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="#7A7F8C" FontSize="12" />
+            </Grid>
+            <StackPanel VerticalAlignment="Center" Margin="22,0,0,0">
+                <TextBlock x:Name="TbName" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryBrush}" />
+                <TextBlock x:Name="TbInfo" FontSize="14" Margin="0,4,0,0" />
+            </StackPanel>
+        </StackPanel>
 
-    <Grid>
-        
-    </Grid>
+        <TextBlock Text="Разделы" Style="{StaticResource SectionTitle}" Margin="0,18,0,8" />
+
+        <WrapPanel Width="520" HorizontalAlignment="Left">
+            <Button Content="Пользователи" ToolTip="Таблица пользователей" Click="BtnUsers_Click" />
+            <Button Content="Пациенты" ToolTip="Таблица пациентов" Click="BtnPatients_Click" />
+            <Button Content="Приёмы" ToolTip="Таблица приёмов" Click="BtnAppointments_Click" />
+            <Button Content="Диаграммы" ToolTip="Диаграммы по данным БД" Click="BtnCharts_Click" />
+            <Button Content="Экспорт отчётов" ToolTip="Выгрузка в Word, Excel и PDF" Click="BtnCharts_Click" />
+            <Button Content="Сменить пароль" ToolTip="Сменить пароль" Style="{StaticResource SecondaryButton}" Click="BtnChangePass_Click" />
+            <Button Content="Выйти" ToolTip="Выйти из системы" Style="{StaticResource SecondaryButton}" Click="BtnLogout_Click" />
+        </WrapPanel>
+    </StackPanel>
 </Page>
