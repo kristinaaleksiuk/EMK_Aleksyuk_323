@@ -85,6 +85,9 @@ namespace _323_Aleksyuk_EMK.Pages
                 case "User":
                     NavigationService?.Navigate(new UserPage());
                     break;
+                case "Doctor":
+                    NavigationService?.Navigate(new DoctorPage());
+                    break;
                 default:
                     ErrorText.Text = "Для роли «" + user.role + "» страница не предусмотрена";
                     break;

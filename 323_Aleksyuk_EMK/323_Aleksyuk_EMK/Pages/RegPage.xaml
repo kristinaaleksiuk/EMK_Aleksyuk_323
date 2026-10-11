@@ -37,6 +37,7 @@
                 <ComboBox x:Name="CbRole" ToolTip="Выберите роль" SelectedIndex="0">
                     <ComboBoxItem Content="User" />
                     <ComboBoxItem Content="Admin" />
+                    <ComboBoxItem Content="Doctor" />
                 </ComboBox>
             </StackPanel>
 

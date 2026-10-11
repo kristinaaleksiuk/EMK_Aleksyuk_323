@@ -25,7 +25,7 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             InitializeComponent();
         }
-    }
+    
      private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             var currentUser = Core.CurrentUser;
@@ -38,52 +38,52 @@ namespace _323_Aleksyuk_EMK.Pages
             TbInfo.Text = "Роль: " + currentUser.role + "  |  Логин: " + currentUser.login;
             //PhotoHelper.Apply(PhotoEllipse, PhotoHint, currentUser.photo);
 
-            _doctorId = currentUser.doctor_id;
-            if (_doctorId > 0)
-            {
-                int did = _doctorId.Value;
-                var card = ctx.doctor.FirstOrDefault(d => d.id == did);
-                TbDoctorInfo.Text = card != null
-                    ? card.Specialty + "  |  Кабинет " + card.cabinet + "  |  Стаж: " + card.experience + " лет"
-                    : "";
-            }
-            else
-            {
-                TbDoctorInfo.Text = "Учётная запись не привязана к карточке врача (обратитесь к администратору)";
-            }
+            //_doctorId = currentUser.doctor_id;
+            //if (_doctorId > 0)
+            //{
+            //    int did = _doctorId.Value;
+            //    var card = ctx.doctor.FirstOrDefault(d => d.id == did);
+            //    TbDoctorInfo.Text = card != null
+            //        ? card.Specialty + "  |  Кабинет " + card.cabinet + "  |  Стаж: " + card.experience + " лет"
+            //        : "";
+            //}
+            //else
+            //{
+            //    TbDoctorInfo.Text = "Учётная запись не привязана к карточке врача (обратитесь к администратору)";
+            //}
 
-            UpdateList();
+            //UpdateList();
         }
 
         private void Filter_Changed(object sender, EventArgs e) { UpdateList(); }
 
         private void UpdateList()
         {
-            if (!IsInitialized) return;
+        //    if (!IsInitialized) return;
 
-            if (!_doctorId.HasValue)
-            {
-                DgAppointments.ItemsSource = null;
-                return;
-            }
+            //if (!_doctorId.HasValue)
+            //{
+            //    DgAppointments.ItemsSource = null;
+            //    return;
+            //}
 
-            int did = _doctorId.Value;
-            var list = Core.DB.appointment.ToList()
-                .Where(a => a.schedule != null && a.schedule.doctor_id == did);
+            //int did = _doctorId.Value;
+            //var list = Core.DB.appointment.ToList()
+            //    .Where(a => a.schedule != null && a.schedule.doctor_id == did);
 
             // фильтр по статусу
-            var status = ((ComboBoxItem)CbStatus.SelectedItem)?.Content.ToString();
-            if (!string.IsNullOrEmpty(status) && status != "Все")
-                list = list.Where(a => a.status == status);
+        //    var status = ((ComboBoxItem)CbStatus.SelectedItem)?.Content.ToString();
+        //    if (!string.IsNullOrEmpty(status) && status != "Все")
+        //        list = list.Where(a => a.status == status);
 
-            // фильтр по дате
-            var period = ((ComboBoxItem)CbPeriod.SelectedItem)?.Content.ToString();
-            if (period == "Сегодня")
-                list = list.Where(a => a.Date.Date == DateTime.Today);
-            else if (period == "Предстоящие")
-                list = list.Where(a => a.Date >= DateTime.Now);
+        //    // фильтр по дате
+        //    var period = ((ComboBoxItem)CbPeriod.SelectedItem)?.Content.ToString();
+        //    if (period == "Сегодня")
+        //        list = list.Where(a => a.Date.Date == DateTime.Today);
+        //    else if (period == "Предстоящие")
+        //        list = list.Where(a => a.Date >= DateTime.Now);
 
-            DgAppointments.ItemsSource = list.OrderBy(a => a.Date).ToList();
+        //    DgAppointments.ItemsSource = list.OrderBy(a => a.Date).ToList();
         }
 
         private void BtnReset_Click(object sender, RoutedEventArgs e)
@@ -102,7 +102,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
             // задачи врача: 1. Анализы -> 2. Диагноз -> 3. Лечение -> 4. Отчёт
-            NavigationService?.Navigate(new VisitPage(selected));
+            //NavigationService?.Navigate(new VisitPage(selected));
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -115,9 +115,9 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            if (MessageBox.Show("Отменить приём пациента «" + selected.PatientShort + "» (" + selected.DateText + ")?",
-                    "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                return;
+            //if (MessageBox.Show("Отменить приём пациента «" + selected.PatientShort + "» (" + selected.DateText + ")?",
+            //        "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            //    return;
 
             try
             {

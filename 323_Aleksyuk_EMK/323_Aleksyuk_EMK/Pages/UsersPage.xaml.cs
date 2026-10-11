@@ -44,7 +44,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 list = list.Where(u => u.fio.ToLower().Contains(q) || u.login.ToLower().Contains(q));
 
             var role = ((ComboBoxItem)CbRole.SelectedItem)?.Content.ToString();
-            if (role == "Admin" || role == "User")
+            if (role == "Admin" || role == "Doctor" || role == "User")
                 list = list.Where(u => u.role == role);
 
             DgUsers.ItemsSource = list.OrderBy(u => u.id).ToList();
