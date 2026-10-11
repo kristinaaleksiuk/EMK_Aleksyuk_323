@@ -24,7 +24,6 @@ namespace _323_Aleksyuk_EMK.Pages
     public partial class AuthPage : Page
     {
         private const int MaxAttempts = 3;     // допустимое число неверных попыток
-        private const int LockSeconds = 30;    // время блокировки входа
 
         private static readonly Random Rnd = new Random();
         private int failedAttempts = 0;
@@ -65,7 +64,7 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 failedAttempts++;
                 PbPassword.Clear();
-                ShowCaptcha();                          // капча - после первой неудачной попытки
+                ShowCaptcha();                          // капча - после неудачной попытки
 
                 if (failedAttempts >= MaxAttempts)
                     StartLock();
@@ -117,10 +116,9 @@ namespace _323_Aleksyuk_EMK.Pages
             TbCaptcha.Clear();
         }
 
-        // ----- Блокировка входа после трёх ошибок -----
+        // ----- Блокировка входа после 3 ошибок -----
         private void StartLock()
         {
-            lockLeft = LockSeconds;
             ButtonEnter.IsEnabled = false;
             ErrorText.Text = "Вход заблокирован. Повторите через " + lockLeft + " с";
 
