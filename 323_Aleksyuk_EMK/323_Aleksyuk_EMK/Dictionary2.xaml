@@ -1,9 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!--
-        ВТОРАЯ (собственная) ТЕМА - зелёная гамма. Шаг 3, п. 4-5 методички.
-        Те же ключи, другие цвета: 2 основных + 2 дополнительных.
-    -->
+  
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Styles.xaml" />
     </ResourceDictionary.MergedDictionaries>

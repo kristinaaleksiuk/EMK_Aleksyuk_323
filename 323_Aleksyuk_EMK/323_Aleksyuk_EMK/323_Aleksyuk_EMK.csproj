@@ -425,6 +425,9 @@
     <Resource Include="Fonts\OpenSans-Italic.ttf" />
     <Resource Include="Fonts\OpenSans-Bold.ttf" />
     <Resource Include="Fonts\OpenSans-Regular.ttf" />
+    <Resource Include="Fonts\PTSerif-Bold.ttf" />
+    <Resource Include="Fonts\PTSerif-Regular.ttf" />
+    <Resource Include="Fonts\PTSerif-Italic.ttf" />
     <None Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </None>
