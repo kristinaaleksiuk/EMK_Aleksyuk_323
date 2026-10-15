@@ -1,11 +1,12 @@
 ﻿<Window x:Class="_323_Aleksyuk_EMK.MainWindow"
+        xmlns:charts="clrnamespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_323_Aleksyuk_EMK"
         mc:Ignorable="d"
-              Title="Приём и ведение ЭМК"
+        Title="Приём и ведение ЭМК"
         Width="1000" Height="640" MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         FontFamily="{DynamicResource AppFont}"
@@ -25,7 +26,7 @@
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель: Назад / заголовок страницы / Сменить тему + бирюзовая линия -->
+        
         <Border Grid.Row="0" Background="{DynamicResource PanelBackground}"
                 BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,3" Grid.ColumnSpan="2">
             <Grid>
@@ -38,7 +39,7 @@
                            Foreground="{DynamicResource PrimaryBrush}" />
                 <Button x:Name="ThemeButton" Content="Сменить тему" HorizontalAlignment="Right"
                         Margin="0,0,8,0" Style="{StaticResource SecondaryButton}"
-                        ToolTip="Переключить словарь стилей" Click="ThemeButton_Click" />
+                        ToolTip="Сменить тему" Click="ThemeButton_Click" />
             </Grid>
         </Border>
 

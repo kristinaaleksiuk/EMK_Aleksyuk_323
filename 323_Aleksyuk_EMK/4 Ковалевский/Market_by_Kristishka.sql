@@ -1,0 +1,195 @@
+USE [master]
+GO
+
+/****** Object:  Database [MarketK]    Script Date: 18.11.2025 9:34:53 ******/
+CREATE DATABASE [MarketK]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'MarketK', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\MarketK.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'MarketK_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\MarketK_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [MarketK].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [MarketK] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [MarketK] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [MarketK] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [MarketK] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [MarketK] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [MarketK] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [MarketK] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [MarketK] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [MarketK] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [MarketK] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [MarketK] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [MarketK] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [MarketK] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [MarketK] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [MarketK] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [MarketK] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [MarketK] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [MarketK] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [MarketK] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [MarketK] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [MarketK] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [MarketK] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [MarketK] SET RECOVERY SIMPLE 
+GO
+
+ALTER DATABASE [MarketK] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [MarketK] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [MarketK] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [MarketK] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [MarketK] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+
+ALTER DATABASE [MarketK] SET DELAYED_DURABILITY = DISABLED 
+GO
+
+ALTER DATABASE [MarketK] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+
+ALTER DATABASE [MarketK] SET QUERY_STORE = ON
+GO
+
+ALTER DATABASE [MarketK] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200)
+GO
+
+ALTER DATABASE [MarketK] SET  READ_WRITE 
+GO
+-- Создание базы данных Marketplace
+CREATE DATABASE MarketK;
+GO
+
+USE MarketK;
+GO
+
+-- Таблица пользователей
+CREATE TABLE [User] (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    Flo NVARCHAR(255) NOT NULL,
+    Age INT NOT NULL,
+    Login NVARCHAR(50) UNIQUE NOT NULL,
+    Password NVARCHAR(100) NOT NULL
+);
+
+-- Таблица товаров
+CREATE TABLE Tovar (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(255) NOT NULL,
+    Price DECIMAL(18,2) NOT NULL
+);
+
+-- Таблица пунктов выдачи заказов (ПВЗ)
+CREATE TABLE Pvz (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    Adres NVARCHAR(500) NOT NULL,
+    Description NVARCHAR(MAX) NOT NULL
+);
+
+-- Таблица корзины
+CREATE TABLE Cart (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    TovarId INT NOT NULL,
+    Count INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (UserId) REFERENCES [User](id),
+    FOREIGN KEY (TovarId) REFERENCES Tovar(id)
+);
+
+-- Таблица заказов
+CREATE TABLE [Order] (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    PvzId INT NOT NULL,
+    Date DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (UserId) REFERENCES [User](id),
+    FOREIGN KEY (PvzId) REFERENCES Pvz(id)
+);
+
+-- Таблица товаров в заказе (связь многие-ко-многим)
+CREATE TABLE OrderTovar (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId INT NOT NULL,
+    TovarId INT NOT NULL,
+    Count INT NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES [Order](id),
+    FOREIGN KEY (TovarId) REFERENCES Tovar(id)
+);
+
+-- Заполнение тестовыми данными
+INSERT INTO [User] (Flo, Age, Login, Password) VALUES 
+('Иванов Иван Иванович', 25, 'ivanov', 'password123'),
+('Петрова Анна Сергеевна', 30, 'petrova', 'anna2024');
+
+INSERT INTO Tovar (Name, Price) VALUES 
+('Смартфон Samsung Galaxy S23', 79999.00),
+('Ноутбук ASUS VivoBook 15', 54999.00),
+('Наушники Sony WH-1000XM4', 24999.00),
+('Клавиатура Logitech MX Keys', 8999.00),
+('Компьютерная мышь Razer DeathAdder', 5999.00);
+
+INSERT INTO Pvz (Adres, Description) VALUES 
+('ул. Ленина, д. 10', 'Пункт выдачи в центре города, работает с 10:00 до 22:00'),
+('пр. Мира, д. 25, ТЦ "Глобус"', 'Пункт в торговом центре, этаж 2, рядом с супермаркетом'),
+('ул. Центральная, д. 5', 'Возле станции метро, парковка для клиентов');
+GO
+

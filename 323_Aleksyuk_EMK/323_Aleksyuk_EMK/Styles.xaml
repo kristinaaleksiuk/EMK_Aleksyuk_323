@@ -1,7 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Шрифт по Руководству по стилю: Open Sans (файлы лежат в папке Fonts), запасной - Segoe UI -->
     <FontFamily x:Key="AppFont">pack://application:,,,/Fonts/#PT Serif</FontFamily>
 
     <!-- ===== Page ===== -->
@@ -10,8 +9,6 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     </Style>
-
-    <!-- ===== Текстовые стили ===== -->
     <Style x:Key="TitleText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="Bold" />

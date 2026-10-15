@@ -4,13 +4,12 @@
              xmlns:local="clr-namespace:_323_Aleksyuk_EMK"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
+        <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Dictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style 
             TargetType="Button">
-                
                 <Setter Property="Background" Value="#FF0080"/>
                 <Setter Property="Height" Value="35"/>
                 <Setter Property="Padding" Value="8"/>
@@ -20,6 +19,11 @@
                 <Setter Property="Foreground" Value="Black"/>
             </Style>
 
+        </ResourceDictionary>-->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Dictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

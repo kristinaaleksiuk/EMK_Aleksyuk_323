@@ -28,15 +28,59 @@ namespace _323_Aleksyuk_EMK
                 return string.Concat(hash.Select(b => b.ToString("X2")));
             }
         }
-		public static string ValidatePassword(string password)
-		{
-			if (string.IsNullOrWhiteSpace(password)) return "Пароль не может быть пустым";
-			if (password.Length < 6) return "Пароль должен быть не менее 6 символов";
-			if (!password.Any(char.IsDigit)) return "Пароль должен содержать хотя бы одну цифру";
-			if (password.Any(c => (c >= 'а' && c <= 'я') || (c >= 'А' && c <= 'Я') || c == 'ё' || c == 'Ё'))
-				return "Пароль должен быть на английской раскладке";
-			return null;
-		}
-	}
+        public static string ValidatePassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                return "Пароль не может быть пустым!";
+            if (password.Length < 6)
+                return "Пароль слишком короткий, должно быть минимум 6 символов!";
+            if (password.Any(c => char.IsLetter(c) && !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))))
+                return "Используйте только английскую раскладку!";
+            if (!password.Any(char.IsDigit))
+                return "Добавьте хотя бы одну цифру!";
+            return null;
+        }
+        /// <summary>Создаёт учётную запись (пароль хешируется). Для роли User сразу создаётся карточка пациента,
+        /// чтобы пользователь мог записываться на приём; недостающие данные пациента заполняет администратор.</summary>
+        public static user CreateUser(string fio, string login, string password, string role, string photo)
+        {
+            var u = new user
+            {
+                fio = fio,
+                login = login,
+                password = GetHash(password),
+                role = role,
+                photo = photo,
+                is_active = true,
+                created_at = DateTime.Now
+            };
+
+            if (role == "User")
+            {
+                u.patient = new patient
+                {
+                    fio = fio,
+                    birth_date = DateTime.Today,                                   // уточняется в таблице «Пациенты»
+                    gender = "Н",                                                  // не указан
+                    policy_number = "P" + Guid.NewGuid().ToString("N").Substring(0, 12)
+                };
+            }
+
+            DB.user.Add(u);
+            try
+            {
+                DB.SaveChanges();
+            }
+            catch
+            {
+                // неудавшуюся запись убираем из контекста, чтобы она не мешала следующим сохранениям
+                if (u.patient != null) DB.Entry(u.patient).State = System.Data.Entity.EntityState.Detached;
+                DB.Entry(u).State = System.Data.Entity.EntityState.Detached;
+                throw;
+            }
+            return u;
+        }
+
+    }
 
 }

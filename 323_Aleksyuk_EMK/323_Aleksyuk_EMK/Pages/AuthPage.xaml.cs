@@ -154,6 +154,16 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             if (lockTimer != null) lockTimer.Stop();
         }
+        //вставка
+        private void TbCaptcha_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Command == ApplicationCommands.Copy ||
+                e.Command == ApplicationCommands.Cut ||
+                e.Command == ApplicationCommands.Paste)
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
 

@@ -1,0 +1,35 @@
+﻿<Page x:Class="_323_Aleksyuk_EMK.Pages.DiagrammPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages" xmlns:charts="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DiagrammPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <ComboBox x:Name="CmbDoctor" DisplayMemberPath="fio" Width="260"
+                  ToolTip="Выберите врача" SelectionChanged="UpdateChart" />
+            <ComboBox x:Name="CmbDiagram" Width="200"
+                  ToolTip="Выберите тип диаграммы" SelectionChanged="UpdateChart" />
+            <Button Content="Экспорт в Excel" Click="BtnExcel_Click" />
+            <Button Content="Экспорт в Word" Click="BtnWord_Click" />
+        </StackPanel>
+        <WindowsFormsHost Grid.Row="1" Margin="5">
+            <charts:Chart x:Name="ChartAppointments">
+                <charts:Chart.Legends>
+                    <charts:Legend>
+                    </charts:Legend>
+                </charts:Chart.Legends>
+            </charts:Chart>
+        </WindowsFormsHost>
+
+    </Grid>
+</Page>

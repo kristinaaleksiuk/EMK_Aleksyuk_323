@@ -51,7 +51,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
     private void BtnChangePass_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService?.Navigate(new ChangePasswordPage());
+        NavigationService?.Navigate(new ChangePassPage());
     }
 
     private void BtnLogout_Click(object sender, RoutedEventArgs e)
