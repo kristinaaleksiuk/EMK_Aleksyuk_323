@@ -25,8 +25,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
-
-        
         <Border Grid.Row="0" Background="{DynamicResource PanelBackground}"
                 BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,3" Grid.ColumnSpan="2">
             <Grid>
@@ -42,11 +40,9 @@
                         ToolTip="Сменить тему" Click="ThemeButton_Click" />
             </Grid>
         </Border>
-
         <!-- Шаг 2, п. 3-4: Frame для страниц, навигационная строка скрыта -->
         <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"
                Background="{DynamicResource PageBackground}" Grid.ColumnSpan="2" />
-
         <!-- Нижняя панель: название приложения слева, дата и время справа -->
         <Border Grid.Row="1" Background="{DynamicResource PanelBackground}" Grid.ColumnSpan="2" Margin="0,534,0,0" Grid.RowSpan="2">
             <Grid Margin="16,0">

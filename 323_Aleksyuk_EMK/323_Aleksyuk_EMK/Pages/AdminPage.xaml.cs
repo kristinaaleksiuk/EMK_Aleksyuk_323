@@ -47,5 +47,7 @@ namespace _323_Aleksyuk_EMK.Pages
         { NavigationService?.Navigate(new ChangePassPage()); }
         private void BtnLogout_Click(object sender, RoutedEventArgs e) 
         { NavigationService?.Navigate(new AuthPage()); }
+        private void BtnDiagramma_Click(object sender, RoutedEventArgs e)
+        { NavigationService?.Navigate(new DiagrammPage()); }
     }
 }
