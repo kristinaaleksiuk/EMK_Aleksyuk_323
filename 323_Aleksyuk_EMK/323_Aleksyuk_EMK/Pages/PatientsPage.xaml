@@ -28,10 +28,10 @@
 
         <DataGrid Grid.Row="2" x:Name="DgPatients">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="60" />
-                <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="2*" />
-                <DataGridTextColumn Header="Дата рождения" Binding="{Binding BirthText}" Width="*" />
-                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="*" />
+                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="100" />
+                <DataGridTextColumn Header="ФИО" Binding="{Binding fio}" Width="2*" />
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding birth_date}" Width="*" />
+                <DataGridTextColumn Header="Телефон" Binding="{Binding phone}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

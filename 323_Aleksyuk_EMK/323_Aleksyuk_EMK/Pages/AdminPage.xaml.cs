@@ -26,6 +26,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            //Users.ItemsSource = db.users.ToList();
             var user = Core.CurrentUser;
             if (user == null) { NavigationService?.Navigate(new AuthPage()); return; }
 

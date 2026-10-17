@@ -38,10 +38,10 @@
 
         <DataGrid Grid.Row="2" x:Name="DgUsers">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="60" />
-                <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="*" />
-                <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="2*" />
-                <DataGridTextColumn Header="Роль" Binding="{Binding Role}" Width="*" />
+                <DataGridTextColumn Header="id" Binding="{Binding id}" Width="*" />
+                <DataGridTextColumn Header="Логин" Binding="{Binding login}" Width="*" />
+                <DataGridTextColumn Header="ФИО" Binding="{Binding fio}" Width="2*" />
+                <DataGridTextColumn Header="Роль" Binding="{Binding role}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

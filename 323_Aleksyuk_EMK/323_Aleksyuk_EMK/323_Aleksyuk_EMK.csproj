@@ -431,7 +431,6 @@
     <Resource Include="Fonts\PTSerif-Bold.ttf" />
     <Resource Include="Fonts\PTSerif-Regular.ttf" />
     <Resource Include="Fonts\PTSerif-Italic.ttf" />
-    <Resource Include="Fonts\PTSerif-Bold - Копировать.ttf" />
     <None Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </None>

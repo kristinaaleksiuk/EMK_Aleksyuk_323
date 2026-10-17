@@ -21,6 +21,10 @@ namespace _323_Aleksyuk_EMK.Pages
         public PatientsPage()
         {
             InitializeComponent();
+            var ctx = Core.DB;
+
+            // Передаем список пациентов в DataGrid
+            DgPatients.ItemsSource = Core.DB.patient.ToList();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

@@ -14,7 +14,6 @@
         Background="{DynamicResource PageBackground}"
         Loaded="Window_Loaded"
         Closing="Window_Closing">
-    <!-- Шаг 2: Grid из трёх строк: 45 / * / 45 -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="33*"/>

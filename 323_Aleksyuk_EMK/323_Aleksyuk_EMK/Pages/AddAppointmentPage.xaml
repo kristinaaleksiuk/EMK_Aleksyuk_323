@@ -16,7 +16,10 @@
                 <ComboBox x:Name="CbPatient" Width="300" DisplayMemberPath="fio" ToolTip="Выберите пациента" />
 
                 <TextBlock Text="Свободное время врача" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CbSlot" Width="300" DisplayMemberPath="Display" ToolTip="Выберите свободное время приёма" />
+                <ComboBox x:Name="CbSlot" Width="300" DisplayMemberPath="visit_date" ToolTip="Выберите свободное время приёма" />
+                <!--<ComboBoxItem Content="09:00" />
+                <ComboBoxItem Content="09:30" />
+                <ComboBoxItem Content="10:00" />-->
 
                 <TextBlock Text="Статус" Style="{StaticResource FieldLabel}" />
                 <ComboBox x:Name="CbStatus" Width="300" ToolTip="Выберите статус приёма">
