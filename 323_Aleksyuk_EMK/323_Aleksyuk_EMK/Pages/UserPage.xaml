@@ -33,10 +33,10 @@
 
         <DataGrid Grid.Row="2" x:Name="DgAppointments">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата" Binding="{Binding DateText}" Width="1.3*" />
-                <DataGridTextColumn Header="Врач" Binding="{Binding DoctorShort}" Width="1.3*" />
-                <DataGridTextColumn Header="Кабинет" Binding="{Binding Cabinet}" Width="*" />
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="*" />
+                <DataGridTextColumn Header="Дата" Binding="{Binding schedule.visit_date}" Width="1.3*" />
+                <DataGridTextColumn Header="Врач" Binding="{Binding schedule.doctor.fio}" Width="1.3*" />
+                <DataGridTextColumn Header="Кабинет" Binding="{Binding cabinet}" Width="*" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding status}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
