@@ -28,7 +28,6 @@ namespace _323_Aleksyuk_EMK.Pages
         private static readonly Random Rnd = new Random();
         private int failedAttempts = 0;
         private string captchaValue = "";
-        private int lockLeft = 0;
         private DispatcherTimer lockTimer;
 
         public AuthPage()
@@ -36,18 +35,10 @@ namespace _323_Aleksyuk_EMK.Pages
             InitializeComponent();
             Core.CurrentUser = null;          // открытие страницы авторизации = выход из системы
         }
-
+        
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
-            if (lockLeft > 0) return;
-            ErrorText.Text = "";
-
-            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.Password))
-            {
-                ErrorText.Text = "Введите логин и пароль";
-                return;
-            }
-
+            
             // Если капча показана - сначала проверяем её
             if (CaptchaPanel.Visibility == Visibility.Visible && TbCaptcha.Text.Trim() != captchaValue)
             {
@@ -64,12 +55,10 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 failedAttempts++;
                 PbPassword.Clear();
-                ShowCaptcha();                          // капча - после неудачной попытки
+                ErrorText.Text = "Неверный логин или пароль";
 
-                if (failedAttempts >= MaxAttempts)
-                    StartLock();
-                else
-                    ErrorText.Text = "Неверный логин или пароль. Осталось попыток: " + (MaxAttempts - failedAttempts);
+                if (failedAttempts >= MaxAttempts)      // капча после 3 неверных попыток (Шаг 5)
+                    ShowCaptcha();
                 return;
             }
 
@@ -119,41 +108,6 @@ namespace _323_Aleksyuk_EMK.Pages
             TbCaptcha.Clear();
         }
 
-        // ----- Блокировка входа после 3 ошибок -----
-        private void StartLock()
-        {
-            ButtonEnter.IsEnabled = false;
-            ErrorText.Text = "Вход заблокирован. Повторите через " + lockLeft + " с";
-
-            if (lockTimer == null)
-            {
-                lockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-                lockTimer.Tick += LockTimer_Tick;
-            }
-            lockTimer.Start();
-        }
-
-        private void LockTimer_Tick(object sender, EventArgs e)
-        {
-            lockLeft--;
-            if (lockLeft <= 0)
-            {
-                lockTimer.Stop();
-                ButtonEnter.IsEnabled = true;
-                failedAttempts = 0;
-                ErrorText.Text = "";
-                NewCaptcha();
-            }
-            else
-            {
-                ErrorText.Text = "Вход заблокирован. Повторите через " + lockLeft + " с";
-            }
-        }
-
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (lockTimer != null) lockTimer.Stop();
-        }
         //вставка
         private void TbCaptcha_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {

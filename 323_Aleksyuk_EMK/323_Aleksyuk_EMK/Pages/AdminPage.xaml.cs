@@ -33,8 +33,7 @@ namespace _323_Aleksyuk_EMK.Pages
             TbName.Text = user.fio;
             TbInfo.Text = "Роль: " + user.role;
 
-            // Закомментировали строку с фото, так как оно необязательно
-            // PhotoHelper.Apply(PhotoEllipse, PhotoHint, user.photo);
+          
         }
         private void BtnUsers_Click(object sender, RoutedEventArgs e) 
         { NavigationService?.Navigate(new UsersPage()); }

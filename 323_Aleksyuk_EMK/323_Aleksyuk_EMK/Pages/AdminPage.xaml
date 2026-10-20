@@ -27,7 +27,6 @@
             <Button Content="Пользователи" ToolTip="Таблица пользователей" Click="BtnUsers_Click" />
             <Button Content="Пациенты" ToolTip="Таблица пациентов" Click="BtnPatients_Click" />
             <Button Content="Приёмы" ToolTip="Таблица приёмов" Click="BtnAppointments_Click" />
-            <!--<Button Content="Диаграммы" ToolTip="Диаграммы по данным БД" Click="BtnCharts_Click" />-->
             <Button Content="Экспорт отчётов" ToolTip="Выгрузка в Word, Excel и PDF" Click="BtnDiagramma_Click" />
             <Button Content="Сменить пароль" ToolTip="Сменить пароль" Style="{StaticResource SecondaryButton}" Click="BtnChangePass_Click" />
             <Button Content="Выйти" ToolTip="Выйти из системы" Style="{StaticResource SecondaryButton}" Click="BtnLogout_Click" />

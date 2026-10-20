@@ -92,6 +92,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 if (appointment == null)
                 {
                     appointment = new appointment();
+                    appointment.created_at = DateTime.Now;
                     Core.DB.appointment.Add(appointment);
                 }
 

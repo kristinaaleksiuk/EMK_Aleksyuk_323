@@ -56,7 +56,10 @@ namespace _323_Aleksyuk_EMK.Pages
 
     private void BtnLogout_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService?.Navigate(new AuthPage());
+            if (MessageBox.Show("Вы уверены, что хотите выйти из системы?", "Выход",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) 
+                NavigationService?.Navigate(new AuthPage());
     }
+
 }
 }

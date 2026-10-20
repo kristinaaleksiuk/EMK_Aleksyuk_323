@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-        Title="ЭМК — Авторизация" Unloaded="Page_Unloaded">
+        Title="ЭМК — Авторизация">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="330" Margin="0,16">
             <TextBlock Text="Вход в систему" Style="{StaticResource TitleText}" />
