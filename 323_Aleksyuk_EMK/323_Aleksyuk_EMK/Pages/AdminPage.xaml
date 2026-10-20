@@ -33,4 +33,6 @@
             <Button Content="Выйти" ToolTip="Выйти из системы" Style="{StaticResource SecondaryButton}" Click="BtnLogout_Click" />
         </WrapPanel>
     </StackPanel>
+    
+    <!--Регистрация не работает--> 
 </Page>

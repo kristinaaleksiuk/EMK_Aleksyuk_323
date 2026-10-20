@@ -44,9 +44,9 @@ namespace _323_Aleksyuk_EMK.Pages
 			.ToList();
     }
 
-    private void BtnAdd_Click(object sender, RoutedEventArgs e)
+    private void BtnAddPreem_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService?.Navigate(new AddAppointmentPage(null));
+        //NavigationService?.Navigate(new AddAppointmentPage(null));
     }
 
     private void BtnChangePass_Click(object sender, RoutedEventArgs e)

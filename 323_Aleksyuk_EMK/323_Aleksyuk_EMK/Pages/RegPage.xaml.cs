@@ -46,15 +46,16 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-			// 6.3 формат пароля: проверка длины
-			if (PbFirst.Password.Length < 6)
-			{
-				ErrorText.Text = "Пароль должен быть не менее 6 символов!";
-				return;
-			}
+            // 6.3 формат пароля: длина, английская раскладка, цифра
+            string passError = Core.ValidatePassword(PbFirst.Password);
+            if (passError != null)
+            {
+                ErrorText.Text = passError;
+                return;
+            }
 
-			// 6.4 пароли совпадают
-			if (PbFirst.Password != PbSecond.Password)
+            // 6.4 пароли совпадают
+            if (PbFirst.Password != PbSecond.Password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;
@@ -62,38 +63,21 @@ namespace _323_Aleksyuk_EMK
 
             // 6.5 запись в БД; пароль хранится только в виде хеша (Шаг 7)
             string role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
-            var user = new user
-            {
-                fio = TbFio.Text.Trim(),
-                login = login,
-                password = Core.GetHash(PbFirst.Password),
-                role = role,
-                created_at = DateTime.Now, // Передаем текущее системное время
-                is_active = true           // По умолчанию активируем учетную запись
-            };
-
             try
             {
-                Core.DB.SaveChanges();
+                // CreateUser хеширует пароль, добавляет запись в контекст и вызывает SaveChanges
+                Core.CreateUser(TbFio.Text.Trim(), login, PbFirst.Password, role, null);
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            catch (Exception ex)
             {
-                // Этот цикл выведет в окно отладки или MessageBox точное имя поля, которое не заполнено
-                foreach (var validationErrors in ex.EntityValidationErrors)
-                {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Свойство: {validationError.PropertyName} Ошибка: {validationError.ErrorMessage}");
-                    }
-                }
-                throw; // Программа остановится здесь, но в окне "Вывод" (Output) будет написана причина
+                ErrorText.Text = "Не удалось зарегистрировать: " + (ex.InnerException?.InnerException?.Message ?? ex.Message);
+                return;
             }
 
             MessageBox.Show("Пользователь успешно зарегистрирован!", "Регистрация",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             NavigationService?.Navigate(new AuthPage());
         }
-
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new AuthPage());
