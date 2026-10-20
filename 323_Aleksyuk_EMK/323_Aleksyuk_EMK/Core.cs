@@ -23,7 +23,6 @@ namespace _323_Aleksyuk_EMK
                 return string.Concat(hash.Select(b => b.ToString("X2")));
             }
         }
-
         public static string ValidatePassword(string password)
         {
             if (string.IsNullOrEmpty(password))
