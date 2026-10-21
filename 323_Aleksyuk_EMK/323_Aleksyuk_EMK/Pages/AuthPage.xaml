@@ -13,10 +13,14 @@
 
             <StackPanel Width="260">
                 <TextBlock Text="Логин" Style="{StaticResource FieldLabel}" />
-                <TextBox x:Name="TbLogin" ToolTip="Введите логин" />
+                <TextBox x:Name="TbLogin"  ToolTip="Введите логин" />
+                <Label x:Name="lblLoginHint" Content="Введите логин" Style="{StaticResource HintLabel}"
+           MouseLeftButtonUp="lblLoginHint_MouseLeftButtonUp" />
 
                 <TextBlock Text="Пароль" Style="{StaticResource FieldLabel}" />
                 <PasswordBox x:Name="PbPassword" ToolTip="Введите пароль" />
+                <Label x:Name="lblPassHint" Content="Введите пароль" Style="{StaticResource HintLabel}"
+           MouseLeftButtonUp="lblPassHint_MouseLeftButtonUp" />
 
                 <!-- Капча: появляется после первой неудачной попытки -->
                 <StackPanel x:Name="CaptchaPanel" Visibility="Collapsed">

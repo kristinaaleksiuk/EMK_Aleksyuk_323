@@ -82,5 +82,20 @@ namespace _323_Aleksyuk_EMK
         {
             NavigationService?.Navigate(new AuthPage());
         }
+        private void TbFio_TextChanged(object sender, TextChangedEventArgs e)
+        { lblFioHint.Visibility = TbFio.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible; }
+        private void lblFioHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { TbFio.Focus(); }
+
+        private void TbLogin_TextChanged(object sender, TextChangedEventArgs e)
+        { lblLoginHint.Visibility = TbLogin.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible; }
+        private void lblLoginHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { TbLogin.Focus(); }
+
+        private void PbFirst_PasswordChanged(object sender, RoutedEventArgs e)
+        { lblPassHint.Visibility = PbFirst.Password.Length > 0 ? Visibility.Hidden : Visibility.Visible; }
+        private void lblPassHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { PbFirst.Focus(); }
+
+        private void PbSecond_PasswordChanged(object sender, RoutedEventArgs e)
+        { lblPassSecHint.Visibility = PbSecond.Password.Length > 0 ? Visibility.Hidden : Visibility.Visible; }
+        private void lblPassSecHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { PbSecond.Focus(); }
     }
 }

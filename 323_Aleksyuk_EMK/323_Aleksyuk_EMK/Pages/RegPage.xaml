@@ -20,15 +20,25 @@
                 <StackPanel Grid.Column="0" Width="260" HorizontalAlignment="Left">
                     <TextBlock Text="ФИО" Style="{StaticResource FieldLabel}" />
                     <TextBox x:Name="TbFio" ToolTip="Введите фамилию, имя и отчество" />
+                    <Label x:Name="lblFioHint" Content="Введите ФИО" Style="{StaticResource HintLabel}"
+MouseLeftButtonUp="lblFioHint_MouseLeftButtonUp"/>
                     <TextBlock Text="Пароль (от 6 символов, цифра)" Style="{StaticResource FieldLabel}" />
                     <PasswordBox x:Name="PbFirst" ToolTip="Введите пароль" />
+                    <Label x:Name="lblPassHint" Content="Введите пароль" Style="{StaticResource HintLabel}"
+MouseLeftButtonUp="lblPassHint_MouseLeftButtonUp"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Width="260" HorizontalAlignment="Right">
                     <TextBlock Text="Логин" Style="{StaticResource FieldLabel}" />
-                    <TextBox x:Name="TbLogin" ToolTip="Введите логин" />
+                    <TextBox x:Name="TbLogin" ToolTip="Введите логин"/>
+                    <Label x:Name="lblLoginHint" Content="Введите логин" Style="{StaticResource HintLabel}"
+           MouseLeftButtonUp="lblLoginHint_MouseLeftButtonUp"/>
+                    
                     <TextBlock Text="Повтор пароля" Style="{StaticResource FieldLabel}" />
+                    
                     <PasswordBox x:Name="PbSecond" ToolTip="Повторите пароль" />
+                    <Label x:Name="lblPassSecHint" Content="Повторите пароль" Style="{StaticResource HintLabel}"
+           MouseLeftButtonUp="lblPassSecHint_MouseLeftButtonUp" />
                 </StackPanel>
             </Grid>
 

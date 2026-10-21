@@ -1,45 +1,38 @@
-﻿using _323_Aleksyuk_EMK;
-using DurableTask.Core.Common;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using static System.Collections.Specialized.BitVector32;
-using System.Web.Providers.Entities;
+
 namespace _323_Aleksyuk_EMK.Pages
 {
-    /// <summary>Шаги 4-5: авторизация + капча.
-    /// По макету: капча появляется после первой неудачной попытки, после трёх ошибок вход блокируется.</summary>
+    /// <summary>Авторизация + капча. Капча появляется после 3 неудачных попыток входа.</summary>
     public partial class AuthPage : Page
     {
-        private const int MaxAttempts = 3;     // допустимое число неверных попыток
+        private const int MaxAttempts = 3;     // после стольких ошибок появляется капча
 
         private static readonly Random Rnd = new Random();
         private int failedAttempts = 0;
         private string captchaValue = "";
-        private DispatcherTimer lockTimer;
 
         public AuthPage()
         {
             InitializeComponent();
             Core.CurrentUser = null;          // открытие страницы авторизации = выход из системы
         }
-        
+
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
-            
-            // Если капча показана - сначала проверяем её
+            ErrorText.Text = "";
+
+            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.Password))
+            {
+                ErrorText.Text = "Введите логин и пароль";
+                return;
+            }
+
+            // Если капча уже показана - сначала проверяем её
             if (CaptchaPanel.Visibility == Visibility.Visible && TbCaptcha.Text.Trim() != captchaValue)
             {
                 ErrorText.Text = "Неверно введена капча";
@@ -47,7 +40,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            string hashedPassword = Core.GetHash(PbPassword.Password);   // Шаг 7
+            string hashedPassword = Core.GetHash(PbPassword.Password);
             var user = Core.DB.user.AsNoTracking()
                 .FirstOrDefault(u => u.login == TbLogin.Text && u.password == hashedPassword);
 
@@ -55,14 +48,21 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 failedAttempts++;
                 PbPassword.Clear();
-                ErrorText.Text = "Неверный логин или пароль";
 
-                if (failedAttempts >= MaxAttempts)      // капча после 3 неверных попыток (Шаг 5)
-                    ShowCaptcha();
+                if (failedAttempts >= MaxAttempts)
+                {
+                    ShowCaptcha();                        // капча после 3 неудачных попыток
+                    ErrorText.Text = "Неверный логин или пароль. Введите капчу";
+                }
+                else
+                {
+                    ErrorText.Text = "Неверный логин или пароль. Осталось попыток до капчи: "
+                                     + (MaxAttempts - failedAttempts);
+                }
                 return;
             }
 
-            // Успешный вход: берём отслеживаемую запись пользователя
+            // Успешный вход
             Core.CurrentUser = Core.DB.user.First(u => u.id == user.id);
             failedAttempts = 0;
 
@@ -73,9 +73,6 @@ namespace _323_Aleksyuk_EMK.Pages
                     break;
                 case "User":
                     NavigationService?.Navigate(new UserPage());
-                    break;
-                case "Doctor":
-                    NavigationService?.Navigate(new DoctorPage());
                     break;
                 default:
                     ErrorText.Text = "Для роли «" + user.role + "» страница не предусмотрена";
@@ -108,7 +105,7 @@ namespace _323_Aleksyuk_EMK.Pages
             TbCaptcha.Clear();
         }
 
-        //вставка
+        // Копирование и вставка в поле капчи запрещены
         private void TbCaptcha_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (e.Command == ApplicationCommands.Copy ||
@@ -118,7 +115,17 @@ namespace _323_Aleksyuk_EMK.Pages
                 e.Handled = true;
             }
         }
+    
+        private void TbLogin_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lblLoginHint.Visibility = TbLogin.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+        private void lblLoginHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { TbLogin.Focus(); }
+
+        private void PbPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            lblPassHint.Visibility = PbPassword.Password.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+        private void lblPassHint_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) { PbPassword.Focus(); }
     }
 }
-
-

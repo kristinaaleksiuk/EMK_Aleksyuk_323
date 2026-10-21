@@ -8,7 +8,7 @@ namespace _323_Aleksyuk_EMK.Pages
 {
     public partial class AddAppointmentPage : Page
     {
-        private readonly appointment _current;     // null - новый приём
+        private readonly appointment _current;     
 
         public AddAppointmentPage(appointment selected)
         {
