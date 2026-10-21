@@ -133,7 +133,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 Word.Paragraph doctorParagraph = document.Paragraphs.Add();
                 Word.Range doctorRange = doctorParagraph.Range;
                 doctorRange.Text = doctor.fio;
-                doctorParagraph.set_Style("Times New Roman");      //Заголовок 1
+                doctorParagraph.set_Style("Заголовок 1");      
                 doctorRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 doctorRange.InsertParagraphAfter();
                 document.Paragraphs.Add();                     // пустая строка

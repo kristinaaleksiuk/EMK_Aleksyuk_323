@@ -36,7 +36,7 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-           
+
 
             // 6.2 логин должен быть уникальным
             string login = TbLogin.Text.Trim();

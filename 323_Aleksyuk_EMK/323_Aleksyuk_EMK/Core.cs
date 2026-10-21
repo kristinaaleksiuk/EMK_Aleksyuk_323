@@ -1,54 +1,69 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace _323_Aleksyuk_EMK
 {
     public class Core
     {
-        // один общий контекст базы данных для всего приложения
+        public static EMKEntities Context = new EMKEntities();
         public static EMKEntities DB { get; } = new EMKEntities();
+        public static EMKEntities EMKEntities => DB;
 
-        // кто сейчас вошёл в систему
         public static user CurrentUser { get; set; }
 
-        // Превращает пароль в хеш SHA1 (40 символов), по хешу пароль не восстановить
         public static string GetHash(string input)
         {
-            SHA1 sha = SHA1.Create();
-            byte[] bytes = Encoding.UTF8.GetBytes(input);   // пароль -> байты
-            byte[] hash = sha.ComputeHash(bytes);           // байты -> хеш
-
-            string result = "";
-            foreach (byte b in hash)
-                result += b.ToString("X2");                 // каждый байт -> 2 символа
-            return result;
+            using (var sha = SHA1.Create())
+            {
+                byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return string.Concat(hash.Select(b => b.ToString("X2")));
+            }
         }
-
-        // Проверка формата пароля. Возвращает текст ошибки или null, если всё хорошо
         public static string ValidatePassword(string password)
         {
+            if (string.IsNullOrEmpty(password))
+                return "Пароль не может быть пустым!";
             if (password.Length < 6)
-                return "Пароль слишком короткий, минимум 6 символов!";
-
-            bool hasDigit = false;
-            foreach (char c in password)
-            {
-                if (char.IsDigit(c))
-                    hasDigit = true;
-
-                bool isLatin = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-                if (char.IsLetter(c) && !isLatin)
-                    return "Используйте только английскую раскладку!";
-            }
-
-            if (!hasDigit)
+                return "Пароль слишком короткий, должно быть минимум 6 символов!";
+            if (password.Any(c => char.IsLetter(c) && !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))))
+                return "Используйте только английскую раскладку!";
+            if (!password.Any(char.IsDigit))
                 return "Добавьте хотя бы одну цифру!";
-
             return null;
         }
 
-        // Возвращает карточку пациента пользователя; если её нет - создаёт (при первой записи на приём)
+        /// <summary>Создаёт учётную запись (пароль хешируется). Карточка пациента здесь не создаётся.</summary>
+        public static user CreateUser(string fio, string login, string password, string role, string photo)
+        {
+            var u = new user
+            {
+                fio = fio,
+                login = login,
+                password = GetHash(password),
+                role = role,
+                photo = photo,
+                is_active = true,
+                created_at = DateTime.Now
+            };
+
+            DB.user.Add(u);
+            try
+            {
+                DB.SaveChanges();
+            }
+            catch
+            {
+                DB.Entry(u).State = System.Data.Entity.EntityState.Detached;
+                throw;
+            }
+            return u;
+        }
+
+        /// <summary>Возвращает карточку пациента пользователя; если её нет - создаёт (при первой записи на приём).</summary>
         public static patient EnsurePatient(user u)
         {
             if (u.patient_id != null)
