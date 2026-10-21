@@ -12,14 +12,26 @@
             <TextBlock x:Name="TbTitle" Text="Новый приём" Style="{StaticResource TitleText}" />
 
             <StackPanel Width="300">
-                <TextBlock Text="Пациент" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CbPatient" Width="300" DisplayMemberPath="fio" ToolTip="Выберите пациента" />
+                <StackPanel x:Name="PatientPanel">
+                    <TextBlock Text="Пациент" Style="{StaticResource FieldLabel}" />
+                    <ComboBox x:Name="CbPatient" Width="300" DisplayMemberPath="fio" ToolTip="Выберите пациента" />
+                </StackPanel>
 
-                <TextBlock Text="Свободное время врача" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CbSlot" Width="300" DisplayMemberPath="visit_date" ToolTip="Выберите свободное время приёма" />
-                <!--<ComboBoxItem Content="09:00" />
-                <ComboBoxItem Content="09:30" />
-                <ComboBoxItem Content="10:00" />-->
+                <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbDoctor" Width="300" DisplayMemberPath="fio" ToolTip="Выберите врача"
+              SelectionChanged="CbDoctor_SelectionChanged" />
+
+                <TextBlock Text="Свободное время" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbSlot" Width="300" ToolTip="Выберите свободное время приёма">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding visit_date, StringFormat=dd.MM.yyyy}" Margin="0,0,10,0" />
+                                <TextBlock Text="{Binding time_start, StringFormat=hh\\:mm}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <TextBlock Text="Статус" Style="{StaticResource FieldLabel}" />
                 <ComboBox x:Name="CbStatus" Width="300" ToolTip="Выберите статус приёма">

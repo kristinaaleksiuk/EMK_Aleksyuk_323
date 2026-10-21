@@ -1,24 +1,11 @@
-﻿using DurableTask.Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Collections.Specialized.BitVector32;
 
 namespace _323_Aleksyuk_EMK.Pages
 {
-    /// <summary>Шаг 10: форма создания и изменения приёма.
-    /// Пациент - из таблицы Patient, время - строки Schedule со статусом «Свободно».</summary>
     public partial class AddAppointmentPage : Page
     {
         private readonly appointment _current;     // null - новый приём
@@ -27,57 +14,74 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             InitializeComponent();
             _current = selected;
-            var ctx = Core.DB;
 
-            // Пациенты: администратор видит всех, пользователь - только себя
+            var patients = new List<patient>();
             if (Core.CurrentUser.role == "Admin")
             {
-                CbPatient.ItemsSource = Core.DB.patient.ToList().OrderBy(p => p.fio).ToList();
+                patients = Core.DB.patient.ToList().OrderBy(p => p.fio).ToList();
             }
             else
             {
-                var currentPatient = Core.DB.patient.FirstOrDefault(p => p.fio == Core.CurrentUser.login);
-                CbPatient.ItemsSource = new List<patient> { currentPatient };
-                CbPatient.SelectedIndex = 0;
-                CbPatient.IsEnabled = false;
-                CbStatus.IsEnabled = false; // обычный пользователь только записывается
+                // пользователь записывает себя: строка «Пациент» скрыта
+                patients.Add(Core.EnsurePatient(Core.CurrentUser));
+                PatientPanel.Visibility = Visibility.Collapsed;
+                CbStatus.IsEnabled = false;
             }
+            CbPatient.ItemsSource = patients;
+            if (patients.Count == 1) CbPatient.SelectedIndex = 0;
 
-            // Свободные слоты (+ текущий слот редактируемого приёма)
-      
-            var now = DateTime.Now;
-            int currentSlotId = _current != null ? _current.schedule_id : 0;
-            CbSlot.ItemsSource = Core.DB.schedule.ToList()
-                .Where(s => s.status == "Свободно" || s.id == currentSlotId)
-                .OrderBy(s => s.time_start) // Сортируем по правильному свойству time_start
-                .ToList();
-
-            CbStatus.SelectedIndex = 0;
+            var doctors = Core.DB.doctor.ToList().OrderBy(d => d.fio).ToList();
+            CbDoctor.ItemsSource = doctors;
 
             if (_current != null)
             {
                 TbTitle.Text = "Изменение приёма";
-                CbPatient.SelectedItem = ((IEnumerable<patient>)CbPatient.ItemsSource).FirstOrDefault((p => p.id == _current.patient_id));
-                CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource).FirstOrDefault(s => s.id == _current.schedule_id);
+                CbPatient.SelectedItem = patients.FirstOrDefault(p => p.id == _current.patient_id);
+                CbDoctor.SelectedItem = doctors.FirstOrDefault(d => d.id == _current.schedule.doctor_id);
+                LoadSlots();
+                CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource)
+                    .FirstOrDefault(s => s.id == _current.schedule_id);
                 foreach (ComboBoxItem item in CbStatus.Items)
                     if (item.Content.ToString() == _current.status) CbStatus.SelectedItem = item;
             }
+            else
+            {
+                CbStatus.SelectedIndex = 0;
+            }
+        }
+
+        // свободное время только у выбранного врача
+        private void LoadSlots()
+        {
+            var selDoctor = CbDoctor.SelectedItem as doctor;
+            if (selDoctor == null) { CbSlot.ItemsSource = null; return; }
+
+            int currentSlotId = _current != null ? _current.schedule_id : 0;
+            var slots = Core.DB.schedule.ToList()
+                .Where(s => s.doctor_id == selDoctor.id &&
+                            ((s.status == "Свободно" && s.visit_date.Date >= DateTime.Today) || s.id == currentSlotId))
+                .OrderBy(s => s.visit_date).ThenBy(s => s.time_start)
+                .ToList();
+
+            CbSlot.ItemsSource = slots;
+            ErrorText.Text = slots.Count == 0 ? "У выбранного врача нет свободного времени" : "";
+        }
+
+        private void CbDoctor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LoadSlots();
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            var patient = CbPatient.SelectedItem as patient;
+            var pat = CbPatient.SelectedItem as patient;
             var slot = CbSlot.SelectedItem as schedule;
-            var statusItem = CbStatus.SelectedItem as ComboBoxItem;
 
-            if (patient == null || slot == null || statusItem == null)
-            {
-                ErrorText.Text = "Выберите пациента и время приёма";
-                return;
-            }
+            if (pat == null) { ErrorText.Text = "Выберите пациента"; return; }
+            if (CbDoctor.SelectedItem == null) { ErrorText.Text = "Выберите врача"; return; }
+            if (slot == null) { ErrorText.Text = "Выберите время приёма"; return; }
 
-            string status = statusItem.Content.ToString();
-            var ctx = Core.DB;
+            string status = (CbStatus.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Запланирован";
 
             try
             {
@@ -96,7 +100,7 @@ namespace _323_Aleksyuk_EMK.Pages
                     Core.DB.appointment.Add(appointment);
                 }
 
-                appointment.patient = patient;
+                appointment.patient = pat;
                 appointment.schedule = slot;
                 appointment.status = status;
                 slot.status = status == "Отменён" ? "Свободно" : "Занято";
@@ -107,7 +111,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.InnerException?.InnerException?.Message ?? ex.Message);
             }
         }
 
