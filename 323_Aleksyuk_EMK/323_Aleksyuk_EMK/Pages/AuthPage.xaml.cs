@@ -1,38 +1,35 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace _323_Aleksyuk_EMK.Pages
 {
-    /// <summary>Авторизация + капча. Капча появляется после 3 неудачных попыток входа.</summary>
     public partial class AuthPage : Page
     {
-        private const int MaxAttempts = 3;     // после стольких ошибок появляется капча
-
-        private static readonly Random Rnd = new Random();
-        private int failedAttempts = 0;
-        private string captchaValue = "";
+        private int failedAttempts = 0;        // сколько раз подряд ввели неверно
+        private string captchaValue = "";      // правильный текст капчи
+        private Random rnd = new Random();
 
         public AuthPage()
         {
             InitializeComponent();
-            Core.CurrentUser = null;          // открытие страницы авторизации = выход из системы
+            Core.CurrentUser = null;           // открыли страницу входа = вышли из системы
         }
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             ErrorText.Text = "";
 
-            if (string.IsNullOrEmpty(TbLogin.Text) || string.IsNullOrEmpty(PbPassword.Password))
+            // 1. Поля заполнены?
+            if (TbLogin.Text == "" || PbPassword.Password == "")
             {
                 ErrorText.Text = "Введите логин и пароль";
                 return;
             }
 
-            // Если капча уже показана - сначала проверяем её
+            // 2. Если на экране капча - сначала проверяем её
             if (CaptchaPanel.Visibility == Visibility.Visible && TbCaptcha.Text.Trim() != captchaValue)
             {
                 ErrorText.Text = "Неверно введена капча";
@@ -40,44 +37,32 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            string hashedPassword = Core.GetHash(PbPassword.Password);
-            var user = Core.DB.user.AsNoTracking()
-                .FirstOrDefault(u => u.login == TbLogin.Text && u.password == hashedPassword);
+            // 3. Ищем пользователя: логин такой же и хеш пароля такой же
+            string hash = Core.GetHash(PbPassword.Password);
+            user found = Core.DB.user.FirstOrDefault(u => u.login == TbLogin.Text && u.password == hash);
 
-            if (user == null)
+            // 4. Не нашли - считаем ошибку; после 3-й показываем капчу
+            if (found == null)
             {
                 failedAttempts++;
                 PbPassword.Clear();
+                ErrorText.Text = "Неверный логин или пароль";
 
-                if (failedAttempts >= MaxAttempts)
+                if (failedAttempts >= 3)
                 {
-                    ShowCaptcha();                        // капча после 3 неудачных попыток
-                    ErrorText.Text = "Неверный логин или пароль. Введите капчу";
-                }
-                else
-                {
-                    ErrorText.Text = "Неверный логин или пароль. Осталось попыток до капчи: "
-                                     + (MaxAttempts - failedAttempts);
+                    CaptchaPanel.Visibility = Visibility.Visible;
+                    NewCaptcha();
                 }
                 return;
             }
 
-            // Успешный вход
-            Core.CurrentUser = Core.DB.user.First(u => u.id == user.id);
-            failedAttempts = 0;
+            // 5. Нашли - запоминаем пользователя и открываем страницу по роли
+            Core.CurrentUser = found;
 
-            switch (user.role)
-            {
-                case "Admin":
-                    NavigationService?.Navigate(new AdminPage());
-                    break;
-                case "User":
-                    NavigationService?.Navigate(new UserPage());
-                    break;
-                default:
-                    ErrorText.Text = "Для роли «" + user.role + "» страница не предусмотрена";
-                    break;
-            }
+            if (found.role == "Admin")
+                NavigationService?.Navigate(new AdminPage());
+            else
+                NavigationService?.Navigate(new UserPage());
         }
 
         private void ButtonReg_Click(object sender, RoutedEventArgs e)
@@ -85,37 +70,28 @@ namespace _323_Aleksyuk_EMK.Pages
             NavigationService?.Navigate(new RegPage());
         }
 
-        // ----- Капча -----
-        private void ShowCaptcha()
-        {
-            if (CaptchaPanel.Visibility != Visibility.Visible)
-                CaptchaPanel.Visibility = Visibility.Visible;
-            NewCaptcha();
-        }
-
-        /// <summary>Случайные 5 символов (без похожих 0/O, 1/I)</summary>
+        // Новая капча: 5 случайных символов
         private void NewCaptcha()
         {
-            const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            var sb = new StringBuilder();
+            string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            captchaValue = "";
             for (int i = 0; i < 5; i++)
-                sb.Append(chars[Rnd.Next(chars.Length)]);
-            captchaValue = sb.ToString();
-            CaptchaText.Text = string.Join(" ", captchaValue.ToCharArray());
+                captchaValue += chars[rnd.Next(chars.Length)];
+
+            CaptchaText.Text = string.Join(" ", captchaValue.ToCharArray());   // с пробелами для читаемости
             TbCaptcha.Clear();
         }
 
-        // Копирование и вставка в поле капчи запрещены
+        // В поле капчи нельзя копировать и вставлять
         private void TbCaptcha_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             if (e.Command == ApplicationCommands.Copy ||
                 e.Command == ApplicationCommands.Cut ||
                 e.Command == ApplicationCommands.Paste)
-            {
                 e.Handled = true;
-            }
         }
-    
+
+        // ----- Плейсхолдеры -----
         private void TbLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
             lblLoginHint.Visibility = TbLogin.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
