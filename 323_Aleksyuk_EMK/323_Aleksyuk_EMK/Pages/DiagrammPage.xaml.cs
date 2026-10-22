@@ -16,6 +16,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using Word = Microsoft.Office.Interop.Word;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
+using System.IO;
 
 namespace _323_Aleksyuk_EMK.Pages
 {

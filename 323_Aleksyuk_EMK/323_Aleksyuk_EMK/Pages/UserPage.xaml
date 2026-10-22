@@ -17,7 +17,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Grid Width="96" Height="96">
-                <Ellipse Fill="{DynamicResource SecondaryBrush}" Stroke="{DynamicResource AccentBrush}" StrokeThickness="2" />
+                <Ellipse Fill="{DynamicResource SecondaryBrush}" Stroke="{DynamicResource AccentBrush}" StrokeThickness="0" />
                 <Ellipse x:Name="PhotoEllipse" Margin="2" />
                 <TextBlock x:Name="PhotoHint" Text="Фото" HorizontalAlignment="Center" VerticalAlignment="Center"
                            Foreground="#7A7F8C" FontSize="12" />
