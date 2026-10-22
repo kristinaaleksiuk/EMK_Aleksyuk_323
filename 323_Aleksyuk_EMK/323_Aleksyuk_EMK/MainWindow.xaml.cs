@@ -26,13 +26,13 @@ namespace _323_Aleksyuk_EMK
         {
             InitializeComponent();
             MainFrame.Navigated += MainFrame_Navigated;
-            MainFrame.Navigate(new AuthPage());          // первая страница приложения
+            MainFrame.Navigate(new AuthPage());          
         }
 
-        // Заголовок окна меняется в зависимости от открытой страницы (Page.Title)
+        
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            // Вход в систему - начало сеанса: журнал навигации очищаем
+            
             if (e.Content is AuthPage)
                 while (MainFrame.CanGoBack)
                     MainFrame.RemoveBackEntry();
@@ -49,7 +49,7 @@ namespace _323_Aleksyuk_EMK
                 MainFrame.GoBack();
         }
 
-        // Шаг 2, п. 5: текущие дата и время в нижней панели
+        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DateTimeNow.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
@@ -58,8 +58,6 @@ namespace _323_Aleksyuk_EMK
             timer.Tick += (o, t) => { DateTimeNow.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"); };
             timer.Start();
         }
-
-        // Шаг 2, п. 8: выход из приложения с подтверждением
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (MessageBox.Show("Вы уверены, что хотите закрыть окно?", "Message",
@@ -68,17 +66,15 @@ namespace _323_Aleksyuk_EMK
             else
                 e.Cancel = false;
         }
-
-        // Шаг 3, п. 5: переключение двух словарей стилей
+      
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {
             _alternativeTheme = !_alternativeTheme;
 
-            // определяем путь к файлу ресурсов
             var uri = new Uri(_alternativeTheme ? "Dictionary2.xaml" : "Dictionary.xaml", UriKind.Relative);
-            // загружаем словарь ресурсов
+          
             ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            // очищаем коллекцию подключённых словарей и добавляем выбранный
+           
             Application.Current.Resources.MergedDictionaries.Clear();
             Application.Current.Resources.MergedDictionaries.Add(resourceDict);
         }

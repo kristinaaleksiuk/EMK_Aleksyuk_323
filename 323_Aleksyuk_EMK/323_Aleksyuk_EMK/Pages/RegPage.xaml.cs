@@ -28,7 +28,7 @@ namespace _323_Aleksyuk_EMK
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
-            // 6.1 проверка заполнения полей
+           
             if (string.IsNullOrWhiteSpace(TbLogin.Text) || string.IsNullOrWhiteSpace(TbFio.Text) ||
                 string.IsNullOrEmpty(PbFirst.Password) || string.IsNullOrEmpty(PbSecond.Password))
             {
@@ -36,9 +36,6 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-
-
-            // 6.2 логин должен быть уникальным
             string login = TbLogin.Text.Trim();
             if (Core.DB.user.AsNoTracking().Any(u => u.login == login))
             {
@@ -46,26 +43,23 @@ namespace _323_Aleksyuk_EMK
                 return;
             }
 
-            // 6.3 формат пароля: длина, английская раскладка, цифра
             string passError = Core.ValidatePassword(PbFirst.Password);
             if (passError != null)
             {
                 ErrorText.Text = passError;
                 return;
             }
-
-            // 6.4 пароли совпадают
             if (PbFirst.Password != PbSecond.Password)
             {
                 ErrorText.Text = "Пароли не совпадают!";
                 return;
             }
 
-            // 6.5 запись в БД; пароль хранится только в виде хеша (Шаг 7)
+           
             string role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
             try
             {
-                // CreateUser хеширует пароль, добавляет запись в контекст и вызывает SaveChanges
+              
                 Core.CreateUser(TbFio.Text.Trim(), login, PbFirst.Password, role, null);
             }
             catch (Exception ex)

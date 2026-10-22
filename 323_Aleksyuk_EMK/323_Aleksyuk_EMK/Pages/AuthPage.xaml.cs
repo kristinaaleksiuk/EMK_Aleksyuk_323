@@ -41,7 +41,7 @@ namespace _323_Aleksyuk_EMK.Pages
             string hash = Core.GetHash(PbPassword.Password);
             user found = Core.DB.user.FirstOrDefault(u => u.login == TbLogin.Text && u.password == hash);
 
-            
+
             if (found == null)
             {
                 failedAttempts++;
@@ -56,8 +56,19 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            
+            // 5. Нашли - запоминаем пользователя
             Core.CurrentUser = found;
+            failedAttempts = 0;
+            ErrorText.Text = "";
+
+            string roleName = found.role == "Admin" ? "Администратор"
+                            : found.role == "Doctor" ? "Врач"
+                                                     : "Пользователь";
+
+            MessageBox.Show("Добро пожаловать, " + found.fio + "!\nРоль: " + roleName,
+                "Авторизация успешна",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
 
             if (found.role == "Admin")
                 NavigationService?.Navigate(new AdminPage());

@@ -22,7 +22,6 @@
                 <Label x:Name="lblPassHint" Content="Введите пароль" Style="{StaticResource HintLabel}"
            MouseLeftButtonUp="lblPassHint_MouseLeftButtonUp" />
 
-                <!-- Капча: появляется после первой неудачной попытки -->
                 <StackPanel x:Name="CaptchaPanel" Visibility="Collapsed">
                     <TextBlock Text="Капча" Style="{StaticResource FieldLabel}" />
                     <Border Background="{DynamicResource SecondaryBrush}"

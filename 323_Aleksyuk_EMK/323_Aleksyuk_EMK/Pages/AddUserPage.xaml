@@ -12,13 +12,22 @@
             <TextBlock x:Name="TbTitle" Text="Новый пользователь" Style="{StaticResource TitleText}" />
 
             <TextBlock Text="ФИО" Style="{StaticResource FieldLabel}" />
-            <TextBox x:Name="TbFio" ToolTip="Введите ФИО" />
+            <Grid HorizontalAlignment="Left">
+                <TextBox x:Name="TbFio" ToolTip="Введите ФИО" TextChanged="TbFio_TextChanged" />
+                <Label x:Name="HintFio" Content="Введите ФИО" Style="{StaticResource HintLabel}" IsHitTestVisible="False" />
+            </Grid>
 
             <TextBlock Text="Логин" Style="{StaticResource FieldLabel}" />
-            <TextBox x:Name="TbLogin" ToolTip="Введите логин" />
+            <Grid HorizontalAlignment="Left">
+                <TextBox x:Name="TbLogin" ToolTip="Введите логин" TextChanged="TbLogin_TextChanged" />
+                <Label x:Name="HintLogin" Content="Введите логин" Style="{StaticResource HintLabel}" IsHitTestVisible="False" />
+            </Grid>
 
             <TextBlock x:Name="LblPass" Text="Пароль" Style="{StaticResource FieldLabel}" />
-            <PasswordBox x:Name="PbPass" ToolTip="Введите пароль" />
+            <Grid HorizontalAlignment="Left">
+                <PasswordBox x:Name="PbPass" ToolTip="Введите пароль" PasswordChanged="PbPass_PasswordChanged" />
+                <Label x:Name="HintPass" Content="Введите пароль" Style="{StaticResource HintLabel}" IsHitTestVisible="False" />
+            </Grid>
 
             <TextBlock Text="Роль" Style="{StaticResource FieldLabel}" />
             <ComboBox x:Name="CbRole" ToolTip="Выберите роль">
@@ -28,7 +37,10 @@
 
             <TextBlock Text="Фото (необязательно)" Style="{StaticResource FieldLabel}" />
             <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="TbPhoto" ToolTip="Путь к файлу фотографии" />
+                <Grid>
+                    <TextBox x:Name="TbPhoto" ToolTip="Путь к файлу фотографии" TextChanged="TbPhoto_TextChanged" />
+                    <Label x:Name="HintPhoto" Content="Путь к файлу фотографии" Style="{StaticResource HintLabel}" IsHitTestVisible="False" />
+                </Grid>
                 <Button Content="Выбрать фото" Margin="10,0,0,0" Style="{StaticResource SecondaryButton}" Click="BtnBrowse_Click" />
             </StackPanel>
 

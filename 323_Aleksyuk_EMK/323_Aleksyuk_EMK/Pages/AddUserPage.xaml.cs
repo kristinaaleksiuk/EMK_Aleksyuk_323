@@ -32,11 +32,33 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 TbTitle.Text = "Изменение пользователя";
                 LblPass.Text = "Новый пароль (оставьте пустым, чтобы не менять)";
+                HintPass.Content = "Оставьте пустым, чтобы не менять";
                 TbFio.Text = _current.fio;
                 TbLogin.Text = _current.login;
                 TbPhoto.Text = _current.photo;
                 CbRole.SelectedIndex = _current.role == "Admin" ? 1 : 0;
             }
+        }
+
+        // ----- Плейсхолдеры: подсказка видна, пока поле пустое -----
+        private void TbFio_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HintFio.Visibility = TbFio.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void TbLogin_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HintLogin.Visibility = TbLogin.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void PbPass_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            HintPass.Visibility = PbPass.Password.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void TbPhoto_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HintPhoto.Visibility = TbPhoto.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
@@ -136,4 +158,3 @@ namespace _323_Aleksyuk_EMK.Pages
         }
     }
 }
-

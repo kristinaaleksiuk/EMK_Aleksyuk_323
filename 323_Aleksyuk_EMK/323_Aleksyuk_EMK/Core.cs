@@ -73,8 +73,7 @@ namespace _323_Aleksyuk_EMK
             {
                 fio = u.fio,
                 birth_date = DateTime.Today,
-                gender = "М",
-                policy_number = "P" + Guid.NewGuid().ToString("N").Substring(0, 12)
+               
             };
             u.patient = p;
             try
