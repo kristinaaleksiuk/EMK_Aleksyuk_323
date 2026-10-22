@@ -36,7 +36,7 @@ namespace _323_Aleksyuk_EMK
             return null;
         }
 
-        /// <summary>Создаёт учётную запись (пароль хешируется). Карточка пациента здесь не создаётся.</summary>
+        /// <summary>Создаёт учётную запись пароль хешируется. Карточка пациента здесь не создаётся.</summary>
         public static user CreateUser(string fio, string login, string password, string role, string photo)
         {
             var u = new user

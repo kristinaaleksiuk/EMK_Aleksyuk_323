@@ -15,7 +15,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Фото, ФИО, роль -->
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Grid Width="96" Height="96">
                 <Ellipse Fill="{DynamicResource SecondaryBrush}" Stroke="{DynamicResource AccentBrush}" StrokeThickness="2" />
@@ -29,7 +28,39 @@
             </StackPanel>
         </StackPanel>
 
-        <TextBlock Grid.Row="1" Text="Мои приёмы" Style="{StaticResource SectionTitle}" Margin="0,14,0,8" />
+        <StackPanel Grid.Row="1" Margin="0,14,0,8">
+            <TextBlock Text="Мои приёмы" Style="{StaticResource SectionTitle}" Margin="0,0,0,6" />
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Поиск по врачу, кабинету или дате" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <TextBox x:Name="TbSearch" ToolTip="Введите часть ФИО врача, номер кабинета или дату (дд.мм.гггг)"
+                             TextChanged="Filter_Changed" />
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Статус" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <ComboBox x:Name="CbStatus" SelectedIndex="0" Width="160" ToolTip="Фильтр по статусу"
+                              SelectionChanged="Filter_Changed">
+                        <ComboBoxItem Content="Все" />
+                        <ComboBoxItem Content="Запланирован" />
+                        <ComboBoxItem Content="Завершён" />
+                        <ComboBoxItem Content="Отменён" />
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Сортировка" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <ComboBox x:Name="CbSort" SelectedIndex="0" Width="200" ToolTip="Порядок отображения приёмов"
+                              SelectionChanged="Filter_Changed">
+                        <ComboBoxItem Content="Дата: сначала новые" />
+                        <ComboBoxItem Content="Дата: сначала старые" />
+                        <ComboBoxItem Content="Врач: А–Я" />
+                        <ComboBoxItem Content="Врач: Я–А" />
+                        <ComboBoxItem Content="Статус" />
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="Сбросить" VerticalAlignment="Bottom" Style="{StaticResource SecondaryButton}"
+                        ToolTip="Очистить поиск, фильтр и сортировку" Click="BtnReset_Click" />
+            </StackPanel>
+        </StackPanel>
 
         <DataGrid Grid.Row="2" x:Name="DgAppointments">
             <DataGrid.Columns>

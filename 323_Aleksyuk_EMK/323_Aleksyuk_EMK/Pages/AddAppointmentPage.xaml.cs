@@ -22,7 +22,7 @@ namespace _323_Aleksyuk_EMK.Pages
             }
             else
             {
-                // пользователь записывает себя: строка «Пациент» скрыта
+                // пользователь записывает себя: строка Пациент скрыта
                 patients.Add(Core.EnsurePatient(Core.CurrentUser));
                 PatientPanel.Visibility = Visibility.Collapsed;
                 CbStatus.IsEnabled = false;

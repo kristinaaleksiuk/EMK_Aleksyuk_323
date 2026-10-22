@@ -3,7 +3,7 @@
 
     <FontFamily x:Key="AppFont">pack://application:,,,/Fonts/#PT Serif</FontFamily>
 
-    <!-- ===== Page ===== -->
+
     <Style TargetType="Page">
         <Setter Property="FontFamily" Value="{StaticResource AppFont}" />
         <Setter Property="FontSize" Value="14" />
@@ -48,7 +48,6 @@
         <Setter Property="Cursor" Value="IBeam" />
     </Style>
 
-    <!-- ===== Кнопки: все 150 x 35 ===== -->
     <Style TargetType="Button">
         <Setter Property="Width" Value="150" />
         <Setter Property="Height" Value="35" />
@@ -89,20 +88,19 @@
         </Setter>
     </Style>
 
-    <!-- Вторичная кнопка (серая) -->
+   
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}" />
         <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
     </Style>
 
-    <!-- Кнопка удаления (красная) -->
     <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
     </Style>
 
-    <!-- ===== Поля ввода: все 260 x 32 ===== -->
+    
     <Style TargetType="TextBox">
         <Setter Property="Width" Value="260" />
         <Setter Property="Height" Value="32" />
@@ -172,7 +170,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
     </Style>
 
-    <!-- ===== DataGrid ===== -->
+  
     <Style x:Key="GridHeader" TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource OnPrimaryBrush}" />
