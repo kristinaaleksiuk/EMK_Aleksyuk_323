@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-       Title="ЭМК — Страница врача" Loaded="Page_Loaded">
+           Title="ЭМК — Страница врача" Loaded="Page_Loaded">
     <Grid Margin="24,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -60,7 +60,8 @@
 
         <DataGrid Grid.Row="2" x:Name="DgAppointments" ToolTip="Приёмы пациентов">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата и время" Binding="{Binding DateText}" Width="1.3*" />
+                <DataGridTextColumn Header="Дата" Binding="{Binding schedule.visit_date, StringFormat=dd.MM.yyyy}" Width="*" />
+                <DataGridTextColumn Header="Время" Binding="{Binding schedule.time_start, StringFormat=hh\\:mm}" Width="0.7*" />
                 <DataGridTextColumn Header="Пациент" Binding="{Binding patient.fio}" Width="2*" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding patient.phone}" Width="1.3*" />
                 <DataGridTextColumn Header="Статус" Binding="{Binding status}" Width="1.2*" />
