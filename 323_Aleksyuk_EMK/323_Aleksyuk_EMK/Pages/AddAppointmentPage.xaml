@@ -17,6 +17,11 @@
                     <ComboBox x:Name="CbPatient" Width="300" DisplayMemberPath="fio" ToolTip="Выберите пациента" />
                 </StackPanel>
 
+                <TextBlock Text="Специализация" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbSpec" Width="300" DisplayMemberPath="name"
+                          ToolTip="Выберите специализацию, чтобы сузить список врачей"
+                          SelectionChanged="CbSpec_SelectionChanged" />
+
                 <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" />
                 <ComboBox x:Name="CbDoctor" Width="300" DisplayMemberPath="fio" ToolTip="Выберите врача"
               SelectionChanged="CbDoctor_SelectionChanged" />
@@ -50,3 +55,4 @@
         </StackPanel>
     </ScrollViewer>
 </Page>
+

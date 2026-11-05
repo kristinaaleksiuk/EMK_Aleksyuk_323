@@ -8,7 +8,8 @@ namespace _323_Aleksyuk_EMK.Pages
 {
     public partial class AddAppointmentPage : Page
     {
-        private readonly appointment _current;     
+        private readonly appointment _current;
+        private List<doctor> _allDoctors;              // все врачи (для фильтра по специализации)     
 
         public AddAppointmentPage(appointment selected)
         {
@@ -30,14 +31,23 @@ namespace _323_Aleksyuk_EMK.Pages
             CbPatient.ItemsSource = patients;
             if (patients.Count == 1) CbPatient.SelectedIndex = 0;
 
-            var doctors = Core.DB.doctor.ToList().OrderBy(d => d.fio).ToList();
-            CbDoctor.ItemsSource = doctors;
+            _allDoctors = Core.DB.doctor.ToList().OrderBy(d => d.fio).ToList();
+            CbDoctor.ItemsSource = _allDoctors;
+
+            // фильтр: «Все специализации» + справочник специализаций
+            var specs = new List<specialization> { new specialization { id = 0, name = "Все специализации" } };
+            specs.AddRange(Core.DB.specialization.ToList().OrderBy(x => x.name));
+            CbSpec.ItemsSource = specs;
+            CbSpec.SelectedIndex = 0;
 
             if (_current != null)
             {
                 TbTitle.Text = "Изменение приёма";
                 CbPatient.SelectedItem = patients.FirstOrDefault(p => p.id == _current.patient_id);
-                CbDoctor.SelectedItem = doctors.FirstOrDefault(d => d.id == _current.schedule.doctor_id);
+                var curDoctor = _allDoctors.FirstOrDefault(d => d.id == _current.schedule.doctor_id);
+                if (curDoctor != null)
+                    CbSpec.SelectedItem = specs.FirstOrDefault(x => x.id == curDoctor.specialization_id);
+                CbDoctor.SelectedItem = curDoctor;
                 LoadSlots();
                 CbSlot.SelectedItem = ((IEnumerable<schedule>)CbSlot.ItemsSource)
                     .FirstOrDefault(s => s.id == _current.schedule_id);
@@ -67,6 +77,17 @@ namespace _323_Aleksyuk_EMK.Pages
             ErrorText.Text = slots.Count == 0 ? "У выбранного врача нет свободного времени" : "";
         }
 
+        // поиск врача по специализации
+        private void CbSpec_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_allDoctors == null) return;
+            var sp = CbSpec.SelectedItem as specialization;
+            CbDoctor.ItemsSource = (sp == null || sp.id == 0)
+                ? _allDoctors
+                : _allDoctors.Where(d => d.specialization_id == sp.id).ToList();
+            CbSlot.ItemsSource = null;
+        }
+
         private void CbDoctor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadSlots();
@@ -74,7 +95,11 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            var pat = CbPatient.SelectedItem as patient;
+            patient pat;
+            if (Core.CurrentUser.role == "Admin")
+                pat = CbPatient.SelectedItem as patient;          // админ выбирает пациента из списка
+            else
+                pat = Core.EnsurePatient(Core.CurrentUser);       // пациент записывает сам себя
             var slot = CbSlot.SelectedItem as schedule;
 
             if (pat == null) { ErrorText.Text = "Выберите пациента"; return; }

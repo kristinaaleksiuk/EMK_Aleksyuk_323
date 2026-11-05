@@ -31,22 +31,59 @@ namespace _323_Aleksyuk_EMK.Pages
             TbInfo.Text = "Роль: " + user.role + "  |  Логин: " + user.login;
 
             UpdateList();
+            ShowReminder();
+        }
+
+        // напоминание о предстоящих приёмах (ближайшие 48 часов)
+        private void ShowReminder()
+        {
+            int? pid = Core.CurrentUser.patient_id;
+            var now = DateTime.Now;
+
+            var soon = Core.DB.appointment.ToList()
+                .Where(a => pid != null && a.patient_id == pid && a.status == "Запланирован" && a.schedule != null)
+                .Select(a => new { A = a, At = a.schedule.visit_date.Date + a.schedule.time_start })
+                .Where(x => x.At >= now && x.At <= now.AddHours(48))
+                .OrderBy(x => x.At)
+                .ToList();
+
+            if (soon.Count == 0)
+            {
+                ReminderBorder.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            var lines = soon.Select(x =>
+            {
+                string day = x.At.Date == DateTime.Today ? "Сегодня"
+                           : x.At.Date == DateTime.Today.AddDays(1) ? "Завтра"
+                           : x.At.ToString("dd.MM.yyyy");
+                var doc = x.A.schedule.doctor;
+                return day + " в " + x.At.ToString("HH:mm") + " — " + (doc != null ? doc.fio + ", каб. " + doc.cabinet : "врач не указан");
+            });
+            TbReminder.Text = "🔔 Напоминание о приёме:\n" + string.Join("\n", lines);
+            ReminderBorder.Visibility = Visibility.Visible;
+        }
+
+        private void BtnMedCard_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new MedicalCardPage());
         }
 
         private void Filter_Changed(object sender, EventArgs e) { UpdateList(); }
 
         private void UpdateList()
         {
-            
+
             if (!IsInitialized || Core.CurrentUser == null) return;
 
             int? patientId = Core.CurrentUser.patient_id;
 
-           
+
             var list = Core.DB.appointment.ToList()
                 .Where(a => a.patient_id == patientId && a.schedule != null);
 
-           
+
             string q = TbSearch.Text.Trim().ToLower();
             if (q.Length > 0)
                 list = list.Where(a =>
@@ -54,12 +91,12 @@ namespace _323_Aleksyuk_EMK.Pages
                     (a.schedule.doctor != null && (a.schedule.doctor.cabinet ?? "").ToLower().Contains(q)) ||
                     a.schedule.visit_date.ToString("dd.MM.yyyy").Contains(q));
 
-            
+
             var status = (CbStatus.SelectedItem as ComboBoxItem)?.Content.ToString();
             if (!string.IsNullOrEmpty(status) && status != "Все")
                 list = list.Where(a => a.status == status);
 
-            
+
             switch (CbSort.SelectedIndex)
             {
                 case 1:  // дата: сначала старые
