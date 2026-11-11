@@ -1,0 +1,28 @@
+﻿<Page x:Class="_323_Aleksyuk_EMK.Pages.PrintPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+         Title="ЭМК — Документ">
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" x:Name="TbTitle" Style="{StaticResource SectionTitle}" FontSize="22" Margin="0,0,0,8" />
+
+        <TextBox Grid.Row="1" x:Name="TbDoc" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="14" Padding="12" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button Content="Печать" ToolTip="Распечатать документ" Click="BtnPrint_Click" />
+            <Button Content="Сохранить в файл" ToolTip="Сохранить документ в текстовый файл" Click="BtnSave_Click" />
+            <Button Content="Закрыть" ToolTip="Вернуться назад" Style="{StaticResource SecondaryButton}" Click="BtnClose_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

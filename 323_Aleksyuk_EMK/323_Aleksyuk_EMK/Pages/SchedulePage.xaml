@@ -1,0 +1,101 @@
+﻿<Page x:Class="_323_Aleksyuk_EMK.Pages.SchedulePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:_323_Aleksyuk_EMK.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+            Title="ЭМК — Расписание приёма" Loaded="Page_Loaded">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="300" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Расписание приёма врачей" Style="{StaticResource SectionTitle}" FontSize="22" Margin="0,0,0,6" />
+
+            <!-- фильтры -->
+            <WrapPanel Grid.Row="1" Margin="0,0,0,10">
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <ComboBox x:Name="CbDoctor" Width="240" DisplayMemberPath="fio" ToolTip="Показать время выбранного врача"
+                              SelectionChanged="Filter_Changed" />
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Дата" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <DatePicker x:Name="DpDate" Width="150" ToolTip="Показать только выбранную дату"
+                                SelectedDateChanged="Filter_Changed" />
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="Статус" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                    <ComboBox x:Name="CbStatus" SelectedIndex="0" Width="130" ToolTip="Фильтр по статусу времени"
+                              SelectionChanged="Filter_Changed">
+                        <ComboBoxItem Content="Все" />
+                        <ComboBoxItem Content="Свободно" />
+                        <ComboBoxItem Content="Занято" />
+                    </ComboBox>
+                </StackPanel>
+                <CheckBox x:Name="ChkUpcoming" IsChecked="True" Content="Только предстоящие" VerticalAlignment="Bottom"
+                          Margin="0,0,14,6" Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                <Button Content="Сбросить" VerticalAlignment="Bottom" Style="{StaticResource SecondaryButton}"
+                        ToolTip="Очистить фильтры" Click="BtnReset_Click" />
+            </WrapPanel>
+
+            <DataGrid Grid.Row="2" x:Name="DgSlots">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Врач" Binding="{Binding doctor.fio}" Width="2*" />
+                    <DataGridTextColumn Header="Дата" Binding="{Binding visit_date, StringFormat=dd.MM.yyyy}" Width="*" />
+                    <DataGridTextColumn Header="Начало" Binding="{Binding time_start, StringFormat=hh\\:mm}" Width="*" />
+                    <DataGridTextColumn Header="Конец" Binding="{Binding time_end, StringFormat=hh\\:mm}" Width="*" />
+                    <DataGridTextColumn Header="Статус" Binding="{Binding status}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="Удалить выбранное время" ToolTip="Удалить свободное время без записей"
+                        Style="{StaticResource DangerButton}" Click="BtnDelete_Click" />
+            </StackPanel>
+
+            <!-- создание слотов -->
+            <StackPanel Grid.Row="4" Margin="0,18,0,0">
+                <TextBlock Text="Создать время приёма" Style="{StaticResource SectionTitle}" Margin="0,0,0,6" />
+                <WrapPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="Врач" Style="{StaticResource FieldLabel}" />
+                        <ComboBox x:Name="CbGenDoctor" Width="240" DisplayMemberPath="fio" ToolTip="Для какого врача создать время" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="С даты" Style="{StaticResource FieldLabel}" />
+                        <DatePicker x:Name="DpFrom" Width="150" ToolTip="Первый день" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="По дату" Style="{StaticResource FieldLabel}" />
+                        <DatePicker x:Name="DpTo" Width="150" ToolTip="Последний день (не более 3 месяцев)" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="Начало" Style="{StaticResource FieldLabel}" />
+                        <TextBox x:Name="TbStart" Text="09:00" Width="80" ToolTip="Начало приёма, например 09:00" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="Конец" Style="{StaticResource FieldLabel}" />
+                        <TextBox x:Name="TbEnd" Text="12:00" Width="80" ToolTip="Конец приёма, например 12:00" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="Длительность, мин" Style="{StaticResource FieldLabel}" />
+                        <TextBox x:Name="TbLen" Text="30" Width="80" ToolTip="Длительность одного приёма в минутах (10-120)" />
+                    </StackPanel>
+                    <CheckBox x:Name="ChkNoWeekends" IsChecked="True" Content="Без выходных" VerticalAlignment="Bottom"
+                              Margin="0,0,14,6" />
+                    <Button Content="Создать" VerticalAlignment="Bottom" ToolTip="Создать время приёма на выбранный период"
+                            Click="BtnGenerate_Click" />
+                </WrapPanel>
+                <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}" HorizontalAlignment="Left" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>
