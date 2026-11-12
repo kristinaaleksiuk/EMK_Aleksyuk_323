@@ -19,8 +19,8 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <StackPanel Margin="0,0,14,0">
-                <TextBlock Text="Поиск по ФИО или телефону" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
-                <TextBox x:Name="TbSearch" ToolTip="Введите часть ФИО или телефона" TextChanged="Filter_Changed" />
+                <TextBlock Text="Поиск по ФИО, телефону или полису" Style="{StaticResource FieldLabel}" Margin="0,0,0,3" />
+                <TextBox x:Name="TbSearch" ToolTip="Введите часть ФИО, телефона или номер полиса" TextChanged="Filter_Changed" />
             </StackPanel>
             <Button Content="Сбросить" VerticalAlignment="Bottom" Style="{StaticResource SecondaryButton}"
                     ToolTip="Очистить фильтр" Click="BtnReset_Click" />
@@ -30,8 +30,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="id" Binding="{Binding id}" Width="100" />
                 <DataGridTextColumn Header="ФИО" Binding="{Binding fio}" Width="2*" />
-                <DataGridTextColumn Header="Дата рождения" Binding="{Binding birth_date}" Width="*" />
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding birth_date, StringFormat=dd.MM.yyyy}" Width="*" />
+                <DataGridTextColumn Header="Пол" Binding="{Binding gender}" Width="60" />
+                <DataGridTextColumn Header="Полис" Binding="{Binding policy_number}" Width="1.3*" />
                 <DataGridTextColumn Header="Телефон" Binding="{Binding phone}" Width="*" />
+                <DataGridTextColumn Header="Почта" Binding="{Binding email}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 

@@ -14,14 +14,20 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="5">
+        <WrapPanel Margin="5">
             <ComboBox x:Name="CmbDoctor" DisplayMemberPath="fio" Width="260"
                   ToolTip="Выберите врача" SelectionChanged="UpdateChart" />
             <ComboBox x:Name="CmbDiagram" Width="200"
                   ToolTip="Выберите тип диаграммы" SelectionChanged="UpdateChart" />
-            <Button Content="Экспорт в Excel" Click="BtnExcel_Click" />
-            <Button Content="Экспорт в Word" Click="BtnWord_Click" />
-        </StackPanel>
+            <TextBlock Text="Период:" VerticalAlignment="Center" Margin="10,0,4,0" />
+            <DatePicker x:Name="DpFrom" Width="130" ToolTip="Начало периода (необязательно)" SelectedDateChanged="UpdateChart" />
+            <TextBlock Text="—" VerticalAlignment="Center" Margin="4,0" />
+            <DatePicker x:Name="DpTo" Width="130" ToolTip="Конец периода (необязательно)" SelectedDateChanged="UpdateChart" />
+            <Button Content="Сбросить период" Style="{StaticResource SecondaryButton}" Click="BtnResetPeriod_Click" />
+            <Button Content="Экспорт в Excel" ToolTip="Отчёт по врачам и статистика по диагнозам" Click="BtnExcel_Click" />
+            <Button Content="Экспорт в Word" ToolTip="Отчёт в Word и PDF" Click="BtnWord_Click" />
+
+        </WrapPanel>
         <WindowsFormsHost Grid.Row="1" Margin="5">
             <charts:Chart x:Name="ChartAppointments">
                 <charts:Chart.Legends>

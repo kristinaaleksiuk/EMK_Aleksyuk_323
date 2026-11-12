@@ -39,9 +39,13 @@ namespace _323_Aleksyuk_EMK.Pages
         { NavigationService?.Navigate(new UsersPage()); }
         private void BtnPatients_Click(object sender, RoutedEventArgs e)
         { NavigationService?.Navigate(new PatientsPage()); }
-        private void BtnAppointments_Click(object sender, RoutedEventArgs e) 
-        { NavigationService?.Navigate(new AddAppointmentPage(null)); }
-        
+        private void BtnAppointments_Click(object sender, RoutedEventArgs e)
+        { NavigationService?.Navigate(new AppointmentsPage()); }
+        private void BtnSchedule_Click(object sender, RoutedEventArgs e)
+        { NavigationService?.Navigate(new SchedulePage()); }
+
+
+
         private void BtnChangePass_Click(object sender, RoutedEventArgs e) 
         { NavigationService?.Navigate(new ChangePassPage()); }
         private void BtnLogout_Click(object sender, RoutedEventArgs e) 

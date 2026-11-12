@@ -51,7 +51,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 currentSeries.Points.Clear();
 
                 var statuses = new[] { "Запланирован", "Завершён", "Отменён" };
-                var appointments = _context.appointment.ToList();
+                var appointments = InPeriod(_context.appointment.ToList()).ToList();
                 foreach (var status in statuses)
                 {
                     currentSeries.Points.AddXY(status,
@@ -61,6 +61,52 @@ namespace _323_Aleksyuk_EMK.Pages
                 }
             }
         }
+        // ---------- период и статистика ----------
+        private IEnumerable<appointment> InPeriod(IEnumerable<appointment> source)
+        {
+            DateTime? dFrom = DpFrom.SelectedDate, dTo = DpTo.SelectedDate;
+            return source.Where(a => a.schedule != null &&
+                                     (dFrom == null || a.schedule.visit_date.Date >= dFrom.Value.Date) &&
+                                     (dTo == null || a.schedule.visit_date.Date <= dTo.Value.Date));
+        }
+
+        private string PeriodText()
+        {
+            DateTime? dFrom = DpFrom.SelectedDate, dTo = DpTo.SelectedDate;
+            if (!dFrom.HasValue && !dTo.HasValue) return "за всё время";
+            return "за период " + (dFrom.HasValue ? dFrom.Value.ToString("dd.MM.yyyy") : "…") + " — " +
+                   (dTo.HasValue ? dTo.Value.ToString("dd.MM.yyyy") : "…");
+        }
+
+        private void BtnResetPeriod_Click(object sender, RoutedEventArgs e)
+        {
+            DpFrom.SelectedDate = null;
+            DpTo.SelectedDate = null;
+        }
+
+        private class DiagStat
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+            public int Count { get; set; }
+        }
+
+        /// <summary>Сколько раз ставился каждый диагноз на завершённых приёмах за период.</summary>
+        private List<DiagStat> GetDiagnosisStats()
+        {
+            DateTime? dFrom = DpFrom.SelectedDate, dTo = DpTo.SelectedDate;
+            var visits = _context.visit.ToList().Where(v =>
+                v.appointment != null && v.appointment.schedule != null && v.appointment.status == "Завершён" &&
+                (dFrom == null || v.appointment.schedule.visit_date.Date >= dFrom.Value.Date) &&
+                (dTo == null || v.appointment.schedule.visit_date.Date <= dTo.Value.Date));
+
+            return visits.SelectMany(v => v.diagnosis)
+                .GroupBy(d => d.id)
+                .Select(g => new DiagStat { Code = g.First().icd10_code, Name = g.First().name, Count = g.Count() })
+                .OrderByDescending(x => x.Count).ThenBy(x => x.Code)
+                .ToList();
+        }
+
         private static string MakeSheetName(string fio, HashSet<string> used)
         {
             foreach (char c in new[] { ':', '\\', '/', '?', '*', '[', ']' })
@@ -79,12 +125,21 @@ namespace _323_Aleksyuk_EMK.Pages
         }
         private void BtnExcel_Click(object sender, RoutedEventArgs e)
         {
+            try { ExportExcel(); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось сформировать отчёт: " + ex.Message + "\nПроверьте, что Microsoft Excel установлен.");
+            }
+        }
+        private void ExportExcel()
+        {
+
             var allDoctors = _context.doctor.ToList();
             if (allDoctors.Count == 0) return;
-            var appointments = _context.appointment.ToList();
+            var appointments = InPeriod(_context.appointment.ToList()).ToList();
 
             var application = new Excel.Application();
-            application.SheetsInNewWorkbook = allDoctors.Count;                 // по листу на врача
+            application.SheetsInNewWorkbook = allDoctors.Count + 1;      // по листу на врача + лист диагнозов
             Excel.Workbook workbook = application.Workbooks.Add(Type.Missing);
             var usedSheetNames = new HashSet<string> { "общий итог" };
             for (int i = 0; i < allDoctors.Count; i++)
@@ -105,11 +160,29 @@ namespace _323_Aleksyuk_EMK.Pages
                 int row = 2;
                 foreach (var a in own)
                 {
-                    worksheet.Cells[row, 1] = a.schedule.visit_date;
+                    worksheet.Cells[row, 1] = a.schedule.visit_date.ToString("dd.MM.yyyy") + " " + a.schedule.time_start.ToString(@"hh\:mm");
                     worksheet.Cells[row, 2] = a.patient != null ? a.patient.fio : "";
                     worksheet.Cells[row, 3] = a.status;
                     row++;
                 }
+                // лист со статистикой по диагнозам (завершённые приёмы за период)
+                var diagSheet = (Excel.Worksheet)application.Worksheets.Item[allDoctors.Count + 1];
+                diagSheet.Name = MakeSheetName("Диагнозы", usedSheetNames);
+                diagSheet.Cells[1, 1] = "Код МКБ-10";
+                diagSheet.Cells[1, 2] = "Диагноз";
+                diagSheet.Cells[1, 3] = "Количество";
+                diagSheet.Range[diagSheet.Cells[1, 1], diagSheet.Cells[1, 3]].Font.Bold = true;
+                int drow = 2;
+                foreach (var st in GetDiagnosisStats())
+                {
+                    diagSheet.Cells[drow, 1] = st.Code;
+                    diagSheet.Cells[drow, 2] = st.Name;
+                    diagSheet.Cells[drow, 3] = st.Count;
+                    drow++;
+                }
+                diagSheet.Cells[drow + 1, 1] = "Период:";
+                diagSheet.Cells[drow + 1, 2] = PeriodText();
+                diagSheet.Columns.AutoFit();
 
                 worksheet.Cells[row + 1, 1] = "Всего приёмов:";
                 worksheet.Cells[row + 1, 2] = own.Count;
@@ -121,10 +194,25 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnWord_Click(object sender, RoutedEventArgs e)
         {
+            var dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Документ Word (*.docx)|*.docx",
+                FileName = "Отчёт по приёмам " + DateTime.Now.ToString("yyyy-MM-dd")
+            };
+            if (dlg.ShowDialog() != true) return;
+
+            try { ExportWord(dlg.FileName, System.IO.Path.ChangeExtension(dlg.FileName, ".pdf")); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось сформировать отчёт: " + ex.Message + "\nПроверьте, что Microsoft Word установлен.");
+            }
+        }
+
+        private void ExportWord(string docxPath, string pdfPath)
+        {
             var allDoctors = _context.doctor.ToList();
             var allStatuses = new[] { "Запланирован", "Завершён", "Отменён" };
-            var appointments = _context.appointment.ToList();
-
+            var appointments = InPeriod(_context.appointment.ToList()).ToList();
             var application = new Word.Application();
             Word.Document document = application.Documents.Add();
 
@@ -174,7 +262,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 }
                 document.Paragraphs.Add();                     // пустая строка
 
-                // аналог максимального платежа: самый поздний приём (тёмно-красный)
+                // самый поздний приём (тёмно-красный)
                 appointment lastAppointment = own.OrderByDescending(a => a.schedule.visit_date).FirstOrDefault();
                 if (lastAppointment != null)
                 {
@@ -188,9 +276,9 @@ namespace _323_Aleksyuk_EMK.Pages
                 }
                 document.Paragraphs.Add();
 
-                // аналог минимального платежа: самый ранний приём (тёмно-зелёный)
+                // самый ранний приём (тёмно-зелёный)
                 appointment firstAppointment = own.OrderBy(a => a.schedule.visit_date).FirstOrDefault();
-                if (firstAppointment != null)      // в методичке тут опечатка: проверяется maxPayment
+                if (firstAppointment != null)
                 {
                     Word.Paragraph firstParagraph = document.Paragraphs.Add();
                     Word.Range firstRange = firstParagraph.Range;
@@ -206,14 +294,48 @@ namespace _323_Aleksyuk_EMK.Pages
                     document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
             }
 
-            // колонтитулы (пп. 3 и 4 методички)
+            // статистика по диагнозам (завершённые приёмы за период)
+            var stats = GetDiagnosisStats();
+            if (allDoctors.Count > 0) document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+            Word.Paragraph statTitle = document.Paragraphs.Add();
+            Word.Range statTitleRange = statTitle.Range;
+            statTitleRange.Text = "Статистика по диагнозам " + PeriodText();
+            object headingStyle = Word.WdBuiltinStyle.wdStyleHeading1;
+            statTitle.set_Style(headingStyle);
+            statTitleRange.InsertParagraphAfter();
+
+            if (stats.Count == 0)
+            {
+                Word.Paragraph none = document.Paragraphs.Add();
+                none.Range.Text = "За выбранный период завершённых приёмов с диагнозами нет.";
+            }
+            else
+            {
+                Word.Paragraph statTableParagraph = document.Paragraphs.Add();
+                Word.Table statTable = document.Tables.Add(statTableParagraph.Range, stats.Count + 1, 3);
+                statTable.Borders.InsideLineStyle = statTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                statTable.Cell(1, 1).Range.Text = "Код МКБ-10";
+                statTable.Cell(1, 2).Range.Text = "Диагноз";
+                statTable.Cell(1, 3).Range.Text = "Количество";
+                statTable.Rows[1].Range.Bold = 1;
+                for (int i = 0; i < stats.Count; i++)
+                {
+                    statTable.Cell(i + 2, 1).Range.Text = stats[i].Code;
+                    statTable.Cell(i + 2, 2).Range.Text = stats[i].Name;
+                    statTable.Cell(i + 2, 3).Range.Text = stats[i].Count.ToString();
+                }
+                statTable.Range.Font.Name = "Times New Roman"; statTable.Range.Font.Size = 12;
+            }
+
+            // колонтитулы: номер страницы и дата
+
             foreach (Word.Section section in document.Sections)
             {
                 Word.HeaderFooter footer = section.Footers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary];
                 footer.PageNumbers.Add(Word.WdPageNumberAlignment.wdAlignPageNumberCenter);
 
                 Word.Range headerRange = section.Headers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range;
-                headerRange.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                headerRange.Text = DateTime.Now.ToString("dd/MM/yyyy") + "  |  Отчёт по приёмам " + PeriodText();
                 headerRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 headerRange.Font.ColorIndex = Word.WdColorIndex.wdBlack;
                 headerRange.Font.Size = 10;
@@ -221,9 +343,10 @@ namespace _323_Aleksyuk_EMK.Pages
 
             application.Visible = true;
 
-            // сохранение: путь укажите самостоятельно (в методичке D:\)
-            document.SaveAs2(@"C:\Users\Admin\Desktop\Аксенова УП\Appointments.docx");
-            document.SaveAs2(@"C:\Users\Admin\Desktop\Аксенова УП\Appointments.pdf", Word.WdExportFormat.wdExportFormatPDF);
+            document.SaveAs2(docxPath);
+            document.SaveAs2(pdfPath, Word.WdExportFormat.wdExportFormatPDF);
+            MessageBox.Show("Отчёт сохранён:" + docxPath + "" + pdfPath);
+
         }
     }
 }

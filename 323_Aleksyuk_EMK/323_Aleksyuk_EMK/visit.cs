@@ -26,7 +26,8 @@ namespace _323_Aleksyuk_EMK
         public int medical_record_id { get; set; }
         public System.DateTime visit_date { get; set; }
         public string complaints { get; set; }
-    
+        public string anamnesis { get; set; }
+
         public virtual appointment appointment { get; set; }
         public virtual ICollection<lab_test> lab_test { get; set; }
         public virtual medical_record medical_record { get; set; }

@@ -29,7 +29,7 @@ namespace _323_Aleksyuk_EMK
         public string email { get; set; }
         public string address { get; set; }
         public string policy_number { get; set; }
-    
+        public string guardian_fio { get; set; }
         public virtual ICollection<appointment> appointment { get; set; }
         public virtual ICollection<medical_record> medical_record { get; set; }
         public virtual ICollection<user> user { get; set; }

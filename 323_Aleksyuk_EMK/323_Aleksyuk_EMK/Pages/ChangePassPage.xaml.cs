@@ -1,5 +1,4 @@
-﻿using DurableTask.Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +36,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            if (Core.GetHash(PbCurrent.Password) != user.password)
+            if (!Core.VerifyPassword(PbCurrent.Password, user.password))
             {
                 ErrorText.Text = "Текущий пароль неверный!";
                 return;

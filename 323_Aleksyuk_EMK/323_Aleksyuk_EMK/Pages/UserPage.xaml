@@ -68,18 +68,22 @@
 
         <DataGrid Grid.Row="2" x:Name="DgAppointments">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата" Binding="{Binding schedule.visit_date}" Width="1.3*" />
+                <DataGridTextColumn Header="Дата" Binding="{Binding schedule.visit_date, StringFormat=dd.MM.yyyy}" Width="*" />
+                <DataGridTextColumn Header="Время" Binding="{Binding schedule.time_start, StringFormat=hh\\:mm}" Width="0.7*" />
                 <DataGridTextColumn Header="Врач" Binding="{Binding schedule.doctor.fio}" Width="1.3*" />
                 <DataGridTextColumn Header="Кабинет" Binding="{Binding schedule.doctor.cabinet}" Width="*" />
                 <DataGridTextColumn Header="Статус" Binding="{Binding status}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+        <WrapPanel Grid.Row="3" Margin="0,10,0,0">
             <Button Content="Записаться на приём" Width="160" ToolTip="Записаться на приём к врачу" Click="BtnAddPreem_Click" />
+            <Button Content="Перенести" ToolTip="Перенести выбранную запись на другое время" Click="BtnReschedule_Click" />
+            <Button Content="Отменить запись" ToolTip="Отменить выбранную запись" Style="{StaticResource DangerButton}" Click="BtnCancelApp_Click" />
+            <Button Content="Талон" ToolTip="Открыть талон на выбранный приём для печати" Click="BtnTicket_Click" />
             <Button Content="Моя медкарта" ToolTip="История приёмов, диагнозы, назначения и анализы" Click="BtnMedCard_Click" />
             <Button Content="Сменить пароль" ToolTip="Сменить пароль" Style="{StaticResource SecondaryButton}" Click="BtnChangePass_Click" />
             <Button Content="Выйти" ToolTip="Выйти из системы" Style="{StaticResource SecondaryButton}" Click="BtnLogout_Click" />
-        </StackPanel>
+        </WrapPanel>
     </Grid>
 </Page>

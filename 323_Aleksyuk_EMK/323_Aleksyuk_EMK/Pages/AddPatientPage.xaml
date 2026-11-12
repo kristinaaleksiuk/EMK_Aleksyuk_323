@@ -16,10 +16,29 @@
                 <TextBox x:Name="TbFio" ToolTip="Введите ФИО пациента" />
 
                 <TextBlock Text="Дата рождения" Style="{StaticResource FieldLabel}" />
-                <DatePicker x:Name="DpBirth" ToolTip="Выберите дату рождения" />
+                <DatePicker x:Name="DpBirth" ToolTip="Выберите дату рождения" SelectedDateChanged="DpBirth_SelectedDateChanged" />
+
+                <TextBlock Text="Пол" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbGender" SelectedIndex="0" ToolTip="Выберите пол">
+                    <ComboBoxItem Content="М" />
+                    <ComboBoxItem Content="Ж" />
+                </ComboBox>
+
+                <TextBlock Text="Номер полиса ОМС (16 цифр)" Style="{StaticResource FieldLabel}" />
+                <TextBox x:Name="TbPolicy" MaxLength="16" ToolTip="Номер полиса ОМС: 16 цифр"
+                        PreviewTextInput="TbPolicy_PreviewTextInput" />
+
 
                 <TextBlock Text="Телефон" Style="{StaticResource FieldLabel}" />
-                <TextBox x:Name="TbPhone" ToolTip="Введите телефон" />
+                <TextBox x:Name="TbPhone" MaxLength="20" ToolTip="Введите телефон" />
+                <TextBlock Text="Электронная почта" Style="{StaticResource FieldLabel}" />
+                <TextBox x:Name="TbEmail" MaxLength="100" ToolTip="Введите электронную почту" />
+                <StackPanel x:Name="GuardianPanel" Visibility="Collapsed">
+                    <TextBlock Text="ФИО законного представителя" Style="{StaticResource FieldLabel}" />
+                    <TextBox x:Name="TbGuardian" MaxLength="150" ToolTip="Для пациентов младше 18 лет" />
+                    
+                </StackPanel>
+
             </StackPanel>
 
             <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}" />

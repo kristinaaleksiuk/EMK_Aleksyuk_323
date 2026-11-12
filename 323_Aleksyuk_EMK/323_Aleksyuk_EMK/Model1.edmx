@@ -64,7 +64,8 @@
           <Property Name="email" Type="nvarchar" MaxLength="100" />
           <Property Name="address" Type="nvarchar" MaxLength="200" />
           <Property Name="policy_number" Type="nvarchar" MaxLength="16" Nullable="false" />
-        </EntityType>
+		  <Property Name="guardian_fio" Type="nvarchar" MaxLength="150" />
+		</EntityType>
         <EntityType Name="prescription">
           <Key>
             <PropertyRef Name="id" />
@@ -109,7 +110,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="password" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="role" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="fio" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="photo" Type="nvarchar" MaxLength="200" />
@@ -129,7 +130,8 @@
           <Property Name="medical_record_id" Type="int" Nullable="false" />
           <Property Name="visit_date" Type="datetime" Nullable="false" />
           <Property Name="complaints" Type="nvarchar" MaxLength="500" />
-        </EntityType>
+		  <Property Name="anamnesis" Type="nvarchar" MaxLength="1000" />
+		</EntityType>
         <EntityType Name="visit_diagnosis">
           <Key>
             <PropertyRef Name="visit_id" />
@@ -489,7 +491,8 @@
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="policy_number" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="appointment" Relationship="Self.FK_app_patient" FromRole="patient" ToRole="appointment" />
+		  <Property Name="guardian_fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+			<NavigationProperty Name="appointment" Relationship="Self.FK_app_patient" FromRole="patient" ToRole="appointment" />
           <NavigationProperty Name="medical_record" Relationship="Self.FK_mr_patient" FromRole="patient" ToRole="medical_record" />
           <NavigationProperty Name="user" Relationship="Self.FK_user_patient" FromRole="patient" ToRole="user" />
         </EntityType>
@@ -541,7 +544,7 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="password" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="fio" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="photo" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="doctor_id" Type="Int32" />
@@ -563,7 +566,8 @@
           <Property Name="medical_record_id" Type="Int32" Nullable="false" />
           <Property Name="visit_date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="complaints" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="appointment" Relationship="Self.FK_visit_appointment" FromRole="visit" ToRole="appointment" />
+		  <Property Name="anamnesis" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+		  <NavigationProperty Name="appointment" Relationship="Self.FK_visit_appointment" FromRole="visit" ToRole="appointment" />
           <NavigationProperty Name="lab_test" Relationship="Self.FK_lab_visit" FromRole="visit" ToRole="lab_test" />
           <NavigationProperty Name="medical_record" Relationship="Self.FK_visit_mr" FromRole="visit" ToRole="medical_record" />
           <NavigationProperty Name="prescription" Relationship="Self.FK_presc_visit" FromRole="visit" ToRole="prescription" />
@@ -897,6 +901,7 @@
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="address" ColumnName="address" />
                 <ScalarProperty Name="policy_number" ColumnName="policy_number" />
+				<ScalarProperty Name="guardian_fio" ColumnName="guardian_fio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -968,6 +973,7 @@
                 <ScalarProperty Name="medical_record_id" ColumnName="medical_record_id" />
                 <ScalarProperty Name="visit_date" ColumnName="visit_date" />
                 <ScalarProperty Name="complaints" ColumnName="complaints" />
+				<ScalarProperty Name="anamnesis" ColumnName="anamnesis" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -9,8 +9,7 @@
         Title="ЭМК — Регистрация">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,16">
-            <TextBlock Text="Регистрация пользователя" Style="{StaticResource TitleText}" />
-
+            <TextBlock Text="Регистрация пациента" Style="{StaticResource TitleText}" />
             <Grid Width="550">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -42,16 +41,74 @@ MouseLeftButtonUp="lblPassHint_MouseLeftButtonUp"/>
                 </StackPanel>
             </Grid>
 
-            <StackPanel Width="260">
-                <TextBlock Text="Роль" Style="{StaticResource FieldLabel}" />
-                <ComboBox x:Name="CbRole" ToolTip="Выберите роль" SelectedIndex="0">
-                    <ComboBoxItem Content="User" />
-                    <ComboBoxItem Content="Admin" />
-                    <ComboBoxItem Content="Doctor" />
-                </ComboBox>
-            </StackPanel>
+            <Grid Width="550" Margin="0,6,0,0">
+                
+                <Grid.ColumnDefinitions>
+                    
+                    <ColumnDefinition Width="*" />
+                    
+                    <ColumnDefinition Width="*" />
+                    
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Width="260" HorizontalAlignment="Left">
+                  
+                    <TextBlock Text="Пол" Style="{StaticResource FieldLabel}" />
+                   
+                    <ComboBox x:Name="CbGender" SelectedIndex="0" ToolTip="Выберите пол">
+                       
+                        <ComboBoxItem Content="М" />
+                       
+                        <ComboBoxItem Content="Ж" />
+                       
+                    </ComboBox>
+                    
 
-            <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}"
+                    <TextBlock Text="Номер полиса ОМС (16 цифр)" Style="{StaticResource FieldLabel}" />
+                    
+                    <TextBox x:Name="TbPolicy" MaxLength="16" ToolTip="Номер полиса ОМС: 16 цифр"
+                            PreviewTextInput="TbPolicy_PreviewTextInput" />
+                        
+
+                        <TextBlock Text="Электронная почта" Style="{StaticResource FieldLabel}" />
+                      
+                        <TextBox x:Name="TbEmail" MaxLength="100" ToolTip="Например: name@mail.ru" />
+                    
+                </StackPanel>
+            
+                <StackPanel Grid.Column="1" Width="260" HorizontalAlignment="Right">
+                   
+                    <TextBlock Text="Дата рождения" Style="{StaticResource FieldLabel}" />
+                    
+                    <DatePicker x:Name="DpBirth" ToolTip="Выберите дату рождения"
+                               SelectedDateChanged="DpBirth_SelectedDateChanged" />
+                        
+
+                        <TextBlock Text="Телефон" Style="{StaticResource FieldLabel}" />
+                        
+                        <TextBox x:Name="TbPhone" MaxLength="20" ToolTip="Например: +7 900 123-45-67"
+                             PreviewTextInput="TbPhone_PreviewTextInput" />
+                           
+
+                            <StackPanel x:Name="GuardianPanel" Visibility="Collapsed">
+                                
+                                <TextBlock Text="ФИО законного представителя" Style="{StaticResource FieldLabel}" />
+                               
+                                <TextBox x:Name="TbGuardian" MaxLength="150"
+                                ToolTip="Для пациентов младше 18 лет: родитель или опекун" />
+                                  
+                            </StackPanel>
+                            
+                </StackPanel>
+                
+            </Grid>
+            
+
+            <CheckBox x:Name="ChkConsent" Width="550" Margin="0,12,0,0"
+                      Content="Даю согласие на обработку персональных данных (Федеральный закон № 152-ФЗ)" />
+
+
+                <TextBlock x:Name="ErrorText" Style="{StaticResource ErrorText}"
                        Text="Пароль должен содержать не менее 6 символов и цифру" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

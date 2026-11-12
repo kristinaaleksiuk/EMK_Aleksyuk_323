@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _323_Aleksyuk_EMK.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,7 +16,26 @@ namespace _323_Aleksyuk_EMK
 
         public static user CurrentUser { get; set; }
 
+        // ---------- пароли (152-ФЗ): случайная соль + PBKDF2, формат v2$итерации$соль$хэш ----------
+        private const string HashPrefix = "v2";
+        private const int HashIterations = 10000;
+
+        private static byte[] Pbkdf2(string password, byte[] salt, int iterations)
+        {
+            using (var d = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+                return d.GetBytes(32);
+        }
+
+        /// <summary>Хэш нового пароля со случайной солью.</summary>
         public static string GetHash(string input)
+        {
+            var salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create()) rng.GetBytes(salt);
+            return HashPrefix + "$" + HashIterations + "$" + Convert.ToBase64String(salt) + "$" +
+                   Convert.ToBase64String(Pbkdf2(input, salt, HashIterations));
+        }
+
+        private static string LegacySha1(string input)
         {
             using (var sha = SHA1.Create())
             {
@@ -23,6 +43,38 @@ namespace _323_Aleksyuk_EMK
                 return string.Concat(hash.Select(b => b.ToString("X2")));
             }
         }
+
+        /// <summary>Проверка пароля: новый формат и старый SHA-1 (для уже созданных учётных записей).</summary>
+        public static bool VerifyPassword(string input, string stored)
+        {
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(stored)) return false;
+
+            if (stored.StartsWith(HashPrefix + "$"))
+            {
+                var parts = stored.Split('$');
+                int iterations;
+                if (parts.Length != 4 || !int.TryParse(parts[1], out iterations)) return false;
+                try
+                {
+                    byte[] salt = Convert.FromBase64String(parts[2]);
+                    byte[] expected = Convert.FromBase64String(parts[3]);
+                    byte[] actual = Pbkdf2(input, salt, iterations);
+                    if (actual.Length != expected.Length) return false;
+                    int diff = 0;
+                    for (int i = 0; i < actual.Length; i++) diff |= actual[i] ^ expected[i];
+                    return diff == 0;
+                }
+                catch (FormatException) { return false; }
+            }
+            return string.Equals(LegacySha1(input), stored, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>true, если пароль хранится в старом (слабом) формате и его нужно пересохранить.</summary>
+        public static bool NeedsRehash(string stored)
+        {
+            return !string.IsNullOrEmpty(stored) && !stored.StartsWith(HashPrefix + "$");
+        }
+
         public static string ValidatePassword(string password)
         {
             if (string.IsNullOrEmpty(password))
@@ -36,8 +88,47 @@ namespace _323_Aleksyuk_EMK
             return null;
         }
 
-        /// <summary>Создаёт учётную запись пароль хешируется. Карточка пациента здесь не создаётся.</summary>
-        public static user CreateUser(string fio, string login, string password, string role, string photo)
+        // ---------- вспомогательные ----------
+        public static int Age(DateTime birth)
+        {
+            var today = DateTime.Today;
+            int age = today.Year - birth.Year;
+            if (birth.Date > today.AddYears(-age)) age--;
+            return age;
+        }
+
+        private static readonly Random _rnd = new Random();
+
+        /// <summary>Уникальный 16-значный номер полиса для автоматически созданной карточки.</summary>
+        public static string GeneratePolicyNumber()
+        {
+            string num;
+            do
+            {
+                num = string.Concat(Enumerable.Range(0, 16).Select(_ => _rnd.Next(10).ToString()));
+            }
+            while (DB.patient.Any(x => x.policy_number == num));
+            return num;
+        }
+
+        /// <summary>Главная страница по роли текущего пользователя.</summary>
+        public static Page HomePage()
+        {
+            if (CurrentUser == null) return new AuthPage();
+            if (CurrentUser.role == "Admin") return new AdminPage();
+            if (CurrentUser.role == "Doctor") return new DoctorPage();
+            return new UserPage();
+        }
+
+        // ---------- пользователи и пациенты ----------
+        /// <summary>
+        /// Создаёт учётную запись. Для роли User сразу создаётся карточка пациента
+        /// (пол, полис, дата рождения, контакты); для Doctor задаётся карточка врача.
+        /// </summary>
+        public static user CreateUser(string fio, string login, string password, string role, string photo,
+                                      int? doctorId = null, string gender = null, string policyNumber = null,
+                                      DateTime? birthDate = null, string phone = null, string email = null,
+                                      string guardianFio = null)
         {
             var u = new user
             {
@@ -46,9 +137,27 @@ namespace _323_Aleksyuk_EMK
                 password = GetHash(password),
                 role = role,
                 photo = photo,
+                email = email,
+                doctor_id = role == "Doctor" ? doctorId : null,
                 is_active = true,
                 created_at = DateTime.Now
             };
+
+            patient newPatient = null;
+            if (role == "User")
+            {
+                newPatient = new patient
+                {
+                    fio = fio,
+                    birth_date = birthDate ?? DateTime.Today,
+                    gender = gender ?? "М",
+                    policy_number = policyNumber ?? GeneratePolicyNumber(),
+                    phone = phone,
+                    email = email,
+                    guardian_fio = guardianFio
+                };
+                u.patient = newPatient;
+            }
 
             DB.user.Add(u);
             try
@@ -58,12 +167,13 @@ namespace _323_Aleksyuk_EMK
             catch
             {
                 DB.Entry(u).State = System.Data.Entity.EntityState.Detached;
+                if (newPatient != null) DB.Entry(newPatient).State = System.Data.Entity.EntityState.Detached;
                 throw;
             }
             return u;
         }
 
-        /// <summary>Возвращает карточку пациента пользователя; если её нет - создаёт (при первой записи на приём).</summary>
+        /// <summary>Возвращает карточку пациента пользователя; если её нет - создаёт с временными данными.</summary>
         public static patient EnsurePatient(user u)
         {
             if (u.patient_id != null)
@@ -72,8 +182,10 @@ namespace _323_Aleksyuk_EMK
             var p = new patient
             {
                 fio = u.fio,
-                birth_date = DateTime.Today,
-               
+                birth_date = DateTime.Today,                 // пациент уточнит позже
+                gender = "М",                                // обязательное поле (М/Ж)
+                policy_number = GeneratePolicyNumber(),      // обязательное и уникальное
+                email = u.email
             };
             u.patient = p;
             try
@@ -87,6 +199,35 @@ namespace _323_Aleksyuk_EMK
                 throw;
             }
             return p;
+        }
+
+        // ---------- приёмы ----------
+        /// <summary>Карточка приёма (visit) + медицинская карта пациента; создаются при первой необходимости.</summary>
+        public static visit GetOrCreateVisit(appointment a)
+        {
+            var v = DB.visit.FirstOrDefault(x => x.appointment_id == a.id);
+            if (v != null) return v;
+
+            var record = DB.medical_record.FirstOrDefault(r => r.patient_id == a.patient_id);
+            if (record == null)
+            {
+                record = new medical_record { patient_id = a.patient_id, created_at = DateTime.Now };
+                DB.medical_record.Add(record);
+            }
+
+            v = new visit { appointment_id = a.id, medical_record = record, visit_date = DateTime.Now };
+            DB.visit.Add(v);
+            DB.SaveChanges();
+            return v;
+        }
+
+        /// <summary>Отмена записи: статус «Отменён», время снова свободно для записи.</summary>
+        public static void CancelAppointment(appointment a)
+        {
+            a.status = "Отменён";
+            var slot = DB.schedule.Find(a.schedule_id);
+            if (slot != null) slot.status = "Свободно";
+            DB.SaveChanges();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using DurableTask.Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -151,5 +150,61 @@ namespace _323_Aleksyuk_EMK.Pages
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 NavigationService?.Navigate(new AuthPage());
         }
+        private appointment SelectedAppointment()
+        {
+            var a = DgAppointments.SelectedItem as appointment;
+            if (a == null) MessageBox.Show("Выберите приём в таблице.");
+            return a;
+        }
+
+        private static DateTime StartOf(appointment a)
+        {
+            return a.schedule.visit_date.Date + a.schedule.time_start;
+        }
+
+        // отмена записи пациентом: время снова становится свободным
+        private void BtnCancelApp_Click(object sender, RoutedEventArgs e)
+        {
+            var a = SelectedAppointment();
+            if (a == null) return;
+            if (a.status != "Запланирован") { MessageBox.Show("Отменить можно только запланированный приём."); return; }
+            if (StartOf(a) < DateTime.Now) { MessageBox.Show("Этот приём уже прошёл."); return; }
+
+            if (MessageBox.Show("Отменить запись к врачу «" + a.schedule.doctor.fio + "» на " +
+                    StartOf(a).ToString("dd.MM.yyyy HH:mm") + "?", "Подтверждение",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                Core.CancelAppointment(a);
+                UpdateList();
+                ShowReminder();
+            }
+            catch (Exception ex)
+            {
+                Core.DB.Entry(a).Reload();
+                MessageBox.Show(ex.InnerException?.InnerException?.Message ?? ex.Message);
+            }
+        }
+
+        private void BtnReschedule_Click(object sender, RoutedEventArgs e)
+        {
+            var a = SelectedAppointment();
+            if (a == null) return;
+            if (a.status != "Запланирован") { MessageBox.Show("Перенести можно только запланированный приём."); return; }
+            if (StartOf(a) < DateTime.Now) { MessageBox.Show("Этот приём уже прошёл."); return; }
+            NavigationService?.Navigate(new AddAppointmentPage(a));
+        }
+
+        private void BtnTicket_Click(object sender, RoutedEventArgs e)
+        {
+            var a = SelectedAppointment();
+            if (a == null) return;
+            NavigationService?.Navigate(new PrintPage("Талон на приём", DocBuilder.BuildTicket(a), () => new UserPage()));
+        }
+
     }
+
 }
+

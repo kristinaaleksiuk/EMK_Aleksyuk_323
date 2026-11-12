@@ -41,7 +41,8 @@ namespace _323_Aleksyuk_EMK.Pages
                 var p = Core.DB.patient.Find(u.patient_id);
                 TbPatient.Text = p == null ? u.fio
                     : p.fio + "   |   Дата рождения: " + p.birth_date.ToString("dd.MM.yyyy") +
-                      "   |   Пол: " + p.gender + "   |   Полис: " + p.policy_number;
+                     "   |   Пол: " + p.gender + "   |   Полис: " + p.policy_number + (string.IsNullOrWhiteSpace(p.guardian_fio) 
+                     ? "" : "   |   Законный представитель: " + p.guardian_fio);
                 TbCard.Text = BuildHistory(u.patient_id.Value, null);
             }
             catch (Exception ex)
@@ -78,7 +79,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 sb.AppendLine("━━ Приём " + sch.visit_date.ToString("dd.MM.yyyy") + " " + sch.time_start.ToString(@"hh\:mm") + " ━━");
                 sb.AppendLine("Врач: " + (doc != null ? doc.fio : "не указан") + (spec != "" ? " (" + spec + ")" : ""));
                 sb.AppendLine("Жалобы: " + (string.IsNullOrWhiteSpace(v.complaints) ? "не указаны" : v.complaints));
-
+                sb.AppendLine("Анамнез: " + (string.IsNullOrWhiteSpace(v.anamnesis) ? "не указан" : v.anamnesis));
                 sb.AppendLine("Анализы:");
                 if (v.lab_test.Count == 0) sb.AppendLine("  — нет");
                 foreach (var t in v.lab_test.OrderBy(x => x.test_date))

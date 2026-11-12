@@ -37,24 +37,32 @@ namespace _323_Aleksyuk_EMK.Pages
                 return;
             }
 
-            
-            string hash = Core.GetHash(PbPassword.Password);
-            user found = Core.DB.user.FirstOrDefault(u => u.login == TbLogin.Text && u.password == hash);
+            string login = TbLogin.Text.Trim();
+            user found = Core.DB.user.FirstOrDefault(u => u.login == login);
+                        
+            if (found != null && !Core.VerifyPassword(PbPassword.Password, found.password))
+                found = null;
 
-
-            if (found == null)
-            {
-                failedAttempts++;
+            if (!found.is_active)
+                            {
                 PbPassword.Clear();
-                ErrorText.Text = "Неверный логин или пароль";
-
-                if (failedAttempts >= 3)
-                {
-                    CaptchaPanel.Visibility = Visibility.Visible;
-                    NewCaptcha();
-                }
-                return;
+                ErrorText.Text = "Учётная запись заблокирована. Обратитесь к администратору";
+                               return;
+                            }
+            
+                       // фиксируем время входа; старый хэш пароля (SHA-1) пересохраняем в защищённом формате
+                       try
+           {
+                found.last_login = DateTime.Now;
+                                if (Core.NeedsRehash(found.password))
+                    found.password = Core.GetHash(PbPassword.Password);
+                Core.DB.SaveChanges();
+                            }
+                        catch
+           {
+                Core.DB.Entry(found).Reload();      // вход не блокируем, если сохранить не удалось
             }
+
 
             // 5. Нашли - запоминаем пользователя
             Core.CurrentUser = found;
