@@ -30,10 +30,23 @@
             </Grid>
 
             <TextBlock Text="Роль" Style="{StaticResource FieldLabel}" />
-            <ComboBox x:Name="CbRole" ToolTip="Выберите роль">
+            <ComboBox x:Name="CbRole" ToolTip="Выберите роль" SelectionChanged="CbRole_SelectionChanged">
                 <ComboBoxItem Content="User" />
                 <ComboBoxItem Content="Admin" />
+                <ComboBoxItem Content="Doctor" />
             </ComboBox>
+
+            <StackPanel x:Name="DoctorPanel" Visibility="Collapsed">
+                <TextBlock Text="Специализация" Style="{StaticResource FieldLabel}" />
+                <ComboBox x:Name="CbSpec" DisplayMemberPath="name" ToolTip="Специализация врача" />
+
+                <TextBlock Text="Кабинет" Style="{StaticResource FieldLabel}" />
+                <TextBox x:Name="TbCabinet" MaxLength="10" ToolTip="Номер кабинета, например 205" />
+
+                <TextBlock Text="Стаж, лет" Style="{StaticResource FieldLabel}" />
+                <TextBox x:Name="TbExperience" MaxLength="2" ToolTip="Стаж работы, от 0 до 60"
+             PreviewTextInput="TbExperience_PreviewTextInput" />
+            </StackPanel>
 
             <TextBlock Text="Фото (необязательно)" Style="{StaticResource FieldLabel}" />
             <StackPanel Orientation="Horizontal">

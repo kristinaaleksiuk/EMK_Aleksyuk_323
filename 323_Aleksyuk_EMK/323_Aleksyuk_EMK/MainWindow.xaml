@@ -43,7 +43,7 @@
         <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"
                Background="{DynamicResource PageBackground}" Grid.ColumnSpan="2" />
         <!-- Нижняя панель: название приложения слева, дата и время справа -->
-        <Border Grid.Row="1" Background="{DynamicResource PanelBackground}" Grid.ColumnSpan="2" Margin="0,534,0,0" Grid.RowSpan="2">
+        <Border Grid.Row="2" Background="{DynamicResource PanelBackground}" Grid.ColumnSpan="2">
             <Grid Margin="16,0">
                 <TextBlock Text="Приём и ведение ЭМК" VerticalAlignment="Center"
                            Foreground="{DynamicResource PrimaryBrush}" />

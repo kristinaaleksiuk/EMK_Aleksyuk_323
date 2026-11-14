@@ -26,6 +26,7 @@ namespace _323_Aleksyuk_EMK.Pages
         {
             InitializeComponent();
             _current = selectedUser;
+            CbSpec.ItemsSource = Core.DB.specialization.ToList().OrderBy(s => s.name).ToList();
             CbRole.SelectedIndex = 0;
 
             if (_current != null)
@@ -36,11 +37,38 @@ namespace _323_Aleksyuk_EMK.Pages
                 TbFio.Text = _current.fio;
                 TbLogin.Text = _current.login;
                 TbPhoto.Text = _current.photo;
-                CbRole.SelectedIndex = _current.role == "Admin" ? 1 : 0;
+                CbRole.SelectedIndex = _current.role == "Admin" ? 1 : _current.role == "Doctor" ? 2 : 0;
+
+                // у врача подставляем данные его карточки
+                if (_current.doctor_id != null)
+                {
+                    var card = Core.DB.doctor.Find(_current.doctor_id);
+                    if (card != null)
+                    {
+                        CbSpec.SelectedItem = ((IEnumerable<specialization>)CbSpec.ItemsSource)
+                            .FirstOrDefault(s => s.id == card.specialization_id);
+                        TbCabinet.Text = card.cabinet;
+                        TbExperience.Text = card.experience.ToString();
+                    }
+                }
             }
         }
 
-        // ----- Плейсхолдеры: подсказка видна, пока поле пустое -----
+        // поля врача показываем только для роли Doctor
+        private void CbRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DoctorPanel == null) return;
+            var role = (CbRole.SelectedItem as ComboBoxItem)?.Content.ToString();
+            DoctorPanel.Visibility = role == "Doctor" ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // в стаже можно вводить только цифры
+        private void TbExperience_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !e.Text.All(char.IsDigit);
+        }
+       
+        // Плейсхолдеры: подсказка видна, пока поле пустое 
         private void TbFio_TextChanged(object sender, TextChangedEventArgs e)
         {
             HintFio.Visibility = TbFio.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
@@ -73,7 +101,6 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            var list = Core.DB.user.ToList().AsEnumerable();
             string fio = TbFio.Text.Trim();
             string login = TbLogin.Text.Trim();
 
@@ -91,56 +118,75 @@ namespace _323_Aleksyuk_EMK.Pages
             bool needPassword = _current == null || PbPass.Password.Length > 0;
             if (needPassword)
             {
-                if (string.IsNullOrWhiteSpace(PbPass.Password))
-                {
-                    ErrorText.Text = "Пароль не может быть пустым!";
-                    return;
-                }
+                string passError = Core.ValidatePassword(PbPass.Password);
+                if (passError != null) { ErrorText.Text = passError; return; }
             }
 
-            string Role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
+            string role = ((ComboBoxItem)CbRole.SelectedItem).Content.ToString();
             string photo = string.IsNullOrWhiteSpace(TbPhoto.Text) ? null : TbPhoto.Text.Trim();
 
+            // данные врача (для карточки врача)
+            int specId = 0, experience = 0;
+            string cabinet = null;
+            if (role == "Doctor")
+            {
+                var spec = CbSpec.SelectedItem as specialization;
+                if (spec == null) { ErrorText.Text = "Выберите специализацию!"; return; }
+                specId = spec.id;
+
+                cabinet = TbCabinet.Text.Trim();
+                if (cabinet.Length == 0) { ErrorText.Text = "Укажите кабинет!"; return; }
+
+                if (!int.TryParse(TbExperience.Text.Trim(), out experience) || experience < 0 || experience > 60)
+                { ErrorText.Text = "Стаж должен быть числом от 0 до 60!"; return; }
+            }
+
+            doctor newCard = null;
             try
             {
-                // 1. Считываем данные роли напрямую из интерфейса, чтобы избежать ошибок с переменными
-                string selectedRole = CbRole.Text;
-
                 if (_current == null)
                 {
-                    var user = new user
-                    {
-                        fio = fio,
-                        login = login,
-                        role = selectedRole, // Передаем правильную переменную
-                        photo = photo,
-                        password = Core.GetHash(PbPass.Password)
-                    };
-                    Core.DB.user.Add(user);
-                    Core.DB.SaveChanges();
-
-                    if (selectedRole == "User")
-                    {
-                        // Создаем пациента и привязываем к нему созданного пользователя по правилам EF5
-                        var newPatient = new patient { fio = fio };
-                        newPatient.user = (ICollection<user>)user;
-
-                        Core.DB.patient.Add(newPatient);
-                        Core.DB.SaveChanges();
-                    }
+                    if (role == "Doctor") newCard = Core.CreateDoctorCard(fio, specId, cabinet, experience);
+                    Core.CreateUser(fio, login, PbPass.Password, role, photo, doctorId: newCard?.id);
                 }
                 else
                 {
                     _current.fio = fio;
                     _current.login = login;
-                    _current.role = selectedRole; // Передаем правильную переменную
+                    _current.role = role;
                     _current.photo = photo;
 
-                    if (needPassword)
+                    // doctor_id и patient_id одновременно задавать нельзя (CK_user_one_link)
+                    if (role == "Doctor")
                     {
-                        _current.password = Core.GetHash(PbPass.Password);
+                        if (_current.doctor_id == null)
+                        {
+                            newCard = Core.CreateDoctorCard(fio, specId, cabinet, experience);
+                            _current.doctor_id = newCard.id;
+                        }
+                        else
+                        {
+                            var card = Core.DB.doctor.Find(_current.doctor_id);
+                            if (card != null)
+                            {
+                                card.fio = fio;
+                                card.specialization_id = specId;
+                                card.cabinet = cabinet;
+                                card.experience = experience;
+                            }
+                        }
+                        _current.patient_id = null;
                     }
+                    else
+                    {
+                        _current.doctor_id = null;
+                    }
+
+                    if (needPassword) _current.password = Core.GetHash(PbPass.Password);
                     Core.DB.SaveChanges();
+
+                    if (role == "User" && _current.patient_id == null)
+                        Core.EnsurePatient(_current);
                 }
 
                 MessageBox.Show("Данные успешно сохранены!");
@@ -148,7 +194,14 @@ namespace _323_Aleksyuk_EMK.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Core.DiscardChanges();
+                // если карточка врача создалась, а пользователя сохранить не удалось, убираем её
+                if (newCard != null)
+                {
+                    try { Core.DB.doctor.Remove(newCard); Core.DB.SaveChanges(); }
+                    catch { Core.DiscardChanges(); }
+                }
+                MessageBox.Show(Core.ErrorMessage(ex));
             }
         }
 

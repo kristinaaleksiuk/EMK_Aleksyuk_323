@@ -25,6 +25,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            Core.RefreshAppointments();
             UpdateList();
         }
 

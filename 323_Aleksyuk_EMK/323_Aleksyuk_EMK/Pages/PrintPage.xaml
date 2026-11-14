@@ -17,7 +17,7 @@
         <TextBlock Grid.Row="0" x:Name="TbTitle" Style="{StaticResource SectionTitle}" FontSize="22" Margin="0,0,0,8" />
 
         <TextBox Grid.Row="1" x:Name="TbDoc" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
-                 VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="14" Padding="12" />
+                 VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="14" Padding="12" Style="{StaticResource ReadOnlyBox}"/>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
             <Button Content="Печать" ToolTip="Распечатать документ" Click="BtnPrint_Click" />

@@ -44,6 +44,8 @@ namespace _323_Aleksyuk_EMK.Pages
             {
                 _visit = GetOrCreateVisit();
                 TbComplaints.Text = _visit.complaints;
+                TbAnamnesis.Text = _visit.anamnesis;
+                TbHistory.Text = MedicalCardPage.BuildHistory(_appointment.patient_id, _visit.id);
                 RefreshAll();
             }
             catch (Exception ex)
@@ -124,6 +126,16 @@ namespace _323_Aleksyuk_EMK.Pages
             try
             {
                 _visit.complaints = TbComplaints.Text.Trim();
+                Core.DB.SaveChanges();
+            }
+            catch (Exception ex) { MessageBox.Show(Inner(ex)); }
+        }
+        private void TbAnamnesis_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_loading || _visit == null || _appointment.status == "Завершён") return;
+            try
+            {
+                _visit.anamnesis = string.IsNullOrWhiteSpace(TbAnamnesis.Text) ? null : TbAnamnesis.Text.Trim();
                 Core.DB.SaveChanges();
             }
             catch (Exception ex) { MessageBox.Show(Inner(ex)); }
@@ -250,7 +262,7 @@ namespace _323_Aleksyuk_EMK.Pages
             sb.AppendLine();
             sb.AppendLine("Жалобы: " + (string.IsNullOrWhiteSpace(_visit.complaints) ? "не указаны" : _visit.complaints));
             sb.AppendLine();
-
+            sb.AppendLine("Анамнез: " + (string.IsNullOrWhiteSpace(_visit.anamnesis) ? "не указан" : _visit.anamnesis));
             sb.AppendLine("Анализы:");
             if (_visit.lab_test.Count == 0) sb.AppendLine("  — нет");
             foreach (var t in _visit.lab_test.OrderBy(x => x.test_date))
@@ -292,6 +304,7 @@ namespace _323_Aleksyuk_EMK.Pages
             try
             {
                 _visit.complaints = TbComplaints.Text.Trim();
+                _visit.anamnesis = string.IsNullOrWhiteSpace(TbAnamnesis.Text) ? null : TbAnamnesis.Text.Trim();
                 _appointment.status = "Завершён";
                 Core.DB.SaveChanges();
                 BuildReport();
@@ -299,6 +312,28 @@ namespace _323_Aleksyuk_EMK.Pages
                 NavigationService?.GoBack();
             }
             catch (Exception ex) { MessageBox.Show(Inner(ex)); }
+        }
+        // выходные документы: направление на анализы и рецепт
+        private void BtnLabReferral_Click(object sender, RoutedEventArgs e)
+        {
+            if (_visit.lab_test.Count == 0)
+            {
+                MessageBox.Show("Сначала добавьте анализы в список.");
+                return;
+            }
+            NavigationService?.Navigate(new PrintPage("Направление на анализы",
+                DocBuilder.BuildLabReferral(_visit), () => new VisitPage(_appointment)));
+        }
+
+        private void BtnPrescriptionPrint_Click(object sender, RoutedEventArgs e)
+        {
+            if (_visit.prescription.Count == 0)
+            {
+                MessageBox.Show("Сначала добавьте назначения.");
+                return;
+            }
+            NavigationService?.Navigate(new PrintPage("Рецепт",
+                DocBuilder.BuildPrescription(_visit), () => new VisitPage(_appointment)));
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)

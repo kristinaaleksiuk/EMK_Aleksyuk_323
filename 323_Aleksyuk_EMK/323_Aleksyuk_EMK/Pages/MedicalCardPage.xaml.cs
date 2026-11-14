@@ -26,6 +26,7 @@ namespace _323_Aleksyuk_EMK.Pages
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            Core.RefreshAppointments();
             var u = Core.CurrentUser;
             if (u == null) { NavigationService?.Navigate(new AuthPage()); return; }
 

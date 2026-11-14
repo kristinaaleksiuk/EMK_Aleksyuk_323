@@ -28,7 +28,7 @@ namespace _323_Aleksyuk_EMK.Pages
 
             TbName.Text = user.fio;
             TbInfo.Text = "Роль: " + user.role + "  |  Логин: " + user.login;
-
+            Core.RefreshAppointments();
             UpdateList();
             ShowReminder();
         }

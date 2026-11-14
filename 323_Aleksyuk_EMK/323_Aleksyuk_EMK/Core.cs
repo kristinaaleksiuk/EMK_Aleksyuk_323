@@ -1,4 +1,5 @@
-﻿using _323_Aleksyuk_EMK.Pages;
+﻿using System.Windows.Controls;
+using _323_Aleksyuk_EMK.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +88,18 @@ namespace _323_Aleksyuk_EMK
                 return "Добавьте хотя бы одну цифру!";
             return null;
         }
-
+        /// <summary>Обновляет приёмы из базы (если статус изменён в другом окне программы или в БД).</summary>
+        public static void RefreshAppointments()
+        {
+            try
+            {
+                var oc = ((System.Data.Entity.Infrastructure.IObjectContextAdapter)DB).ObjectContext;
+                var list = DB.appointment.Local.ToList();
+                if (list.Count > 0)
+                    oc.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, list);
+            }
+            catch { }
+        }
         // ---------- вспомогательные ----------
         public static int Age(DateTime birth)
         {
@@ -172,7 +184,20 @@ namespace _323_Aleksyuk_EMK
             }
             return u;
         }
-
+        /// <summary>Создаёт карточку врача (специализация, кабинет, стаж).</summary>
+        public static doctor CreateDoctorCard(string fio, int specializationId, string cabinet, int experience)
+        {
+            var d = new doctor
+            {
+                fio = fio,
+                specialization_id = specializationId,
+                experience = experience,
+                cabinet = cabinet
+            };
+            DB.doctor.Add(d);
+            DB.SaveChanges();
+            return d;
+        }
         /// <summary>Возвращает карточку пациента пользователя; если её нет - создаёт с временными данными.</summary>
         public static patient EnsurePatient(user u)
         {
@@ -228,6 +253,23 @@ namespace _323_Aleksyuk_EMK
             var slot = DB.schedule.Find(a.schedule_id);
             if (slot != null) slot.status = "Свободно";
             DB.SaveChanges();
+        }
+        /// <summary>Сбрасывает несохранённые изменения после неудачного SaveChanges.</summary>
+        public static void DiscardChanges()
+        {
+            foreach (var e in DB.ChangeTracker.Entries().ToList())
+            {
+                if (e.State == System.Data.Entity.EntityState.Added)
+                    e.State = System.Data.Entity.EntityState.Detached;
+                else if (e.State == System.Data.Entity.EntityState.Modified ||
+                         e.State == System.Data.Entity.EntityState.Deleted)
+                    e.Reload();
+            }
+        }
+        public static string ErrorMessage(Exception ex)
+        {
+            while (ex.InnerException != null) ex = ex.InnerException;
+            return ex.Message;
         }
     }
 }

@@ -171,6 +171,7 @@ namespace _323_Aleksyuk_EMK.Pages
                                 time_end = tEnd,
                                 status = "Свободно"
                             };
+                            Core.DiscardChanges();
                             Core.DB.schedule.Add(slot);
                             existing.Add(slot);
                             created++;

@@ -39,32 +39,47 @@ namespace _323_Aleksyuk_EMK.Pages
 
             string login = TbLogin.Text.Trim();
             user found = Core.DB.user.FirstOrDefault(u => u.login == login);
-                        
+
             if (found != null && !Core.VerifyPassword(PbPassword.Password, found.password))
                 found = null;
 
+            // 1. логин или пароль неверны
+            if (found == null)
+            {
+                failedAttempts++;
+                PbPassword.Clear();
+                ErrorText.Text = "Неверный логин или пароль";
+
+                // после трёх неудачных попыток показываем капчу
+                if (failedAttempts >= 3)
+                {
+                    CaptchaPanel.Visibility = Visibility.Visible;
+                    NewCaptcha();
+                }
+                return;
+            }
+
+            // 2. учётная запись заблокирована
             if (!found.is_active)
-                            {
+            {
                 PbPassword.Clear();
                 ErrorText.Text = "Учётная запись заблокирована. Обратитесь к администратору";
-                               return;
-                            }
-            
-                       // фиксируем время входа; старый хэш пароля (SHA-1) пересохраняем в защищённом формате
-                       try
-           {
+                return;
+            }
+
+            // 3. время входа и пересохранение старого хэша пароля
+            try
+            {
                 found.last_login = DateTime.Now;
-                                if (Core.NeedsRehash(found.password))
+                if (Core.NeedsRehash(found.password))
                     found.password = Core.GetHash(PbPassword.Password);
                 Core.DB.SaveChanges();
-                            }
-                        catch
-           {
+            }
+            catch
+            {
                 Core.DB.Entry(found).Reload();      // вход не блокируем, если сохранить не удалось
             }
 
-
-            // 5. Нашли - запоминаем пользователя
             Core.CurrentUser = found;
             failedAttempts = 0;
             ErrorText.Text = "";

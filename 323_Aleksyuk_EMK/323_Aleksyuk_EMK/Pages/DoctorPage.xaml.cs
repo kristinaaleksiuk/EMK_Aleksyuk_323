@@ -123,6 +123,7 @@ namespace _323_Aleksyuk_EMK.Pages
                 var slot = ctx.schedule.Find(selected.schedule_id);
                 if (slot != null) slot.status = "Свободно";      // время снова доступно для записи
                 ctx.SaveChanges();
+                Core.RefreshAppointments();
                 UpdateList();
             }
             catch (Exception ex)
